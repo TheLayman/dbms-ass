@@ -1,0 +1,120 @@
+
+<html>
+<head>
+  {% load static %}
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+   <body>
+
+     {% load static %}
+     {% load dajaxice_templatetags %}
+     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+     <!-- <script type="text/javascript" src="{{ MEDIA_URL }}jquery.dajax.core.js"></script> -->
+{% block javascript %}
+     <script>
+       function addToPlayList(videoId) {
+         $.ajax({
+           url: '/myapp/addToPlayList/',
+           type: "post",
+           data: {
+            'data': videoId
+           },
+           error: function (xhr, e) {
+              console.log(e);
+           },
+           // TODO : update UI that video is added too PL
+           success: function (data) {
+             if (data) {
+                console.log(data);
+             }
+             document.getElementById("test").innerHTML = "Added to PlayList: " + data;
+           }
+         });
+       }
+       function Like(videoId) {
+         $.ajax({
+           url: '/myapp/Like/',
+           type: "post",
+           data: {
+            'data': videoId
+           },
+           error: function (xhr, e) {
+              console.log(e);
+           },
+           // TODO : update UI that video is Liked.
+           success: function (data) {
+             if (data) {
+                console.log(data);
+             }
+             document.getElementById("test").innerHTML = "Liked "  + data;
+           }
+         });
+       }
+     </script>
+{% endblock %}
+      <div style = "margin: 0 20%;">
+      <form name = "form" action = ""
+         method = "POST" >{% csrf_token %}
+         <div style = "  max-width:470px; display : inline; " >
+               <input type = "text" style = ""
+                  name = "text" />
+         </div>
+         <div style = "max-width:470px; display : inline; ">
+               <button style = "border:0px; background-color:#f90;
+                  height:25px; width:10%;"
+                  value = "Press" >
+                  <strong>Ahh!!!</strong>
+               </button>
+         </div>
+
+      </form>
+
+      </div>
+
+      <div class="wrapper">
+      <a class="third after" href="{% url 'trending' %}">Trending</a>
+      </div>
+
+      <div class="wrapper">
+      <a class="third after" href="{% url 'playList' %}">My PlayList</a>
+      </div>
+
+      <div class="wrapper" id="test" >
+      <a class="third after" href="#">         </a>
+      </div>
+
+      <div class="wrapper">
+      <a class="third after" href="#">{{ current.videoInfo.snippet.description }}</a>
+      </div>
+
+      {% for vid in vid_list %}
+
+      <div class="wrapper">
+      <split>
+      <a id = "vid_{{ vid.videoInfo.id }}" style="font-size: 30px;"class="third after" href="{% url 'hello' %}?id={{ vid.videoInfo.id }}">{{ vid.videoInfo.snippet.title }}</a>
+      <br>
+      <a  href="#" id = "playlist_{{ vid.videoInfo.id }}" style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px">Add to PlayList</a>
+      <a  href="#" id = "like_{{ vid.videoInfo.id }}" style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px;">I Like it</a>
+      </split>
+      </div>
+
+      <script type="text/javascript">
+      // add Listeners
+      document.getElementById("vid_{{ vid.videoInfo.id }}").addEventListener("click", function() {
+      });
+      document.getElementById("playlist_{{ vid.videoInfo.id }}").addEventListener("click", function(event) {
+        event.preventDefault();
+        addToPlayList("{{ vid.videoInfo.id }}");
+      });
+      document.getElementById("like_{{ vid.videoInfo.id }}").addEventListener("click", function(event) {
+        event.preventDefault();
+        Like("{{ vid.videoInfo.id }}");
+      });
+      </script>
+
+      {% endfor %}
+
+   </body>
+
+
+</html>
