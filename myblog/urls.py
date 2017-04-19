@@ -24,15 +24,16 @@ urlpatterns = [
    #url(r'^blog/', include('blog.urls')),
 
    url(r'^admin', include(admin.site.urls)),
-   url(r'^myapp/register/$', register, name = 'register'),
-   url(r'^myapp/login/$', login, name = 'login'),
-   url(r'^myapp/logout/$', logout, name = 'logout'),
-   url(r'^myapp/hello/$', hello, name = 'hello'),
-   url(r'^myapp/trending/$', trending, name = 'trending'),
-   url(r'^myapp/playList/$', playList, name = 'playList'),
+   url(r'^register/$', register, name = 'register'),
+   url(r'^login/$', login, name = 'login'),
+   url(r'^logout/$', logout, name = 'logout'),
+   url(r'^hello/$', hello, name = 'hello'),
+   url(r'^trending/$', trending, name = 'trending'),
+   url(r'^playList/$', playList, name = 'playList'),
+   url(r'^$', hello, name = 'hello'),
 
    ## Ajax views
-   url(r'^myapp/addToPlayList/$', addToPlayList, name = 'addToPlayList'),
-   url(r'^myapp/Like/$', Like, name = 'Like'),
+   url(r'^addToPlayList/$', addToPlayList, name = 'addToPlayList'),
+   url(r'^Like/$', Like, name = 'Like'),
 
 ]

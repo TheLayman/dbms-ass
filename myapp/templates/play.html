@@ -6,6 +6,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expanding Search Bar Deconstructed</title>
+<meta name="description" content="Expanding Search Bar Deconstructed" />
+<meta name="keywords" content="transition, search, expanding, search input, sliding input, css3, javascript" />
+<meta name="author" content="Codrops" />
+<link rel="shortcut icon" href="../favicon.ico">
+<link rel="stylesheet" type="text/css" href="/static/css/default.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/component.css" />
+<script src="/static/js/modernizr.custom.js"></script>
+<script src="/static/js/classie.js"></script>
+    <script src="/static/js/uisearch.js"></script>
+
+<style>
+h5.titlehere{
+  min-height: 100px;
+}
 <style>
 body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 .w3-row-padding img {margin-bottom: 12px}
@@ -39,20 +56,23 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 <div class="w3-top">
   <div class="w3-bar w3-white w3-wide w3-padding w3-card-2">
   <a href="{% url 'hello' %}" class="w3-bar-item w3-button"><span class="w3-padding w3-black w3-opacity-min"><b>babu bhosai</b></span> <span class="w3-hide-small w3-text-blck">Search</span></h1></a>
-    <a href="{% url 'logout' %}" class="w3-bar-item w3-button"><span class="w3-padding w3-red w3-opacity-min"><b>signout</b></span> </a>
+
+  {% if tip == "SignOut" %}
     <a href="{% url 'playList' %}" class="w3-bar-item w3-button">My Playlist</a>
+  {% endif %}
       <a href="{% url 'trending' %}" class="w3-bar-item w3-button">Trending</a>
+      <a href="{% url 'logout' %}" class="w3-bar-item w3-button"><span class="w3-padding w3-red w3-opacity-min"><b>{{tip}}</b></span> </a>
 
     <!-- Float links to the right. Hide them on small screens -->
     <div class="column">
-        <div id="sb-search" class="sb-search">
-          <form name = "form" action = ""
-             method = "POST" > {% csrf_token %}
-            <input class="sb-search-input" placeholder="Enter your search term..." type="text" value="" name="text" />
-            <button> <input class="sb-search-submit" type="submit" value=""> </button>
-            <span class="sb-icon-search"></span>
-          </form>
-        </div>
+      <div id="sb-search" class="sb-search">
+        <form name = "form" action = ""
+           method = "POST" > {% csrf_token %}
+          <input class="sb-search-input" placeholder="Enter your search term..." type="text" value="" name="text" />
+          <button> <input class="sb-search-submit" type="submit" value=""> </button>
+          <span class="sb-icon-search"></span>
+        </form>
+      </div>
       </div>
   </div>
 </div>
@@ -69,17 +89,19 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     <h1>{{ current.title }}</h1>
 
   </header>
-  <a  href="#" id = "playlist_{{ current.videoInfo.id }}"
-  style="font-size: 25px; color : deepskyblue;text-decoration: none;display : inline; padding: 0px 10px">Add to PlayList</a>
-  <a  href="#" id = "like_{{ current.videoInfo.id }}"
-      style="font-size: 25px;color : deepskyblue; text-decoration: none;display : inline; padding: 0px 10px;">I Like it</a>
+    {% if tip == "SignOut" %}
+      <a  href="#" id = "playlist_{{ current.videoInfo.id }}"
+        style="font-size: 25px; color : deepskyblue;text-decoration: none;display : inline; padding: 0px 10px">Add to PlayList</a>
+      <a  href="#" id = "like_{{ current.videoInfo.id }}"
+        style="font-size: 25px;color : deepskyblue; text-decoration: none;display : inline; padding: 0px 10px;">I Like it</a>
+    {% endif %}
 
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
       {% block javascript %}
            <script>
              function addToPlayList(videoId) {
                $.ajax({
-                 url: '/myapp/addToPlayList/',
+                 url: '/addToPlayList/',
                  type: "post",
                  data: {
                   'data': videoId
@@ -96,9 +118,12 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
                  }
                });
              }
+
+               new UISearch( document.getElementById( 'sb-search' ) );
+
              function Like(videoId) {
                $.ajax({
-                 url: '/myapp/Like/',
+                 url: '/Like/',
                  type: "post",
                  data: {
                   'data': videoId
@@ -160,7 +185,8 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 
 <!-- Footer -->
 <footer class="w3-center w3-black w3-padding-16">
-  <p>SUJAY &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; GEORGE &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; PAVAN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BHARADWAJ</p>
+  <p><b>Team Babu Bhosai</b><p>
+  <p>Bharadwaj &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; Sujay &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; <i>Pavan &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; George</i></p>
 </footer>
 
 

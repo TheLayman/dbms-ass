@@ -26,7 +26,7 @@
   <script>
     function addToPlayList(videoId) {
       $.ajax({
-        url: '/myapp/addToPlayList/',
+        url: '/addToPlayList/',
         type: "post",
         data: {
          'data': videoId
@@ -45,7 +45,7 @@
     }
     function Like(videoId) {
       $.ajax({
-        url: '/myapp/Like/',
+        url: '/Like/',
         type: "post",
         data: {
          'data': videoId
@@ -70,10 +70,12 @@
 <div class="w3-top">
   <div class="w3-bar w3-white w3-wide w3-padding w3-card-2">
     <a href="{% url 'hello' %}" class="w3-bar-item w3-button"><span class="w3-padding w3-black w3-opacity-min"><b>babu bhosai</b></span> <span class="w3-hide-small w3-text-blck">Search</span></h1></a>
-     <a href="{% url 'logout' %}"  class="w3-bar-item w3-button"><span class="w3-padding w3-red w3-opacity-min"><b>signout</b></span> </a>
-    <a href="{% url 'trending' %}" class="w3-bar-item w3-button"><h5> Trending</h5></a>
-      <a href="{% url 'playList' %}" class="w3-bar-item w3-button"><h5> PlayList</h5></a>
-      <div class="column">
+    {% if tip == "SignOut" %}
+      <a href="{% url 'playList' %}" class="w3-bar-item w3-button">My Playlist</a>
+    {% endif %}
+      <a href="{% url 'trending' %}" class="w3-bar-item w3-button">Trending</a>
+      <a href="{% url 'logout' %}" class="w3-bar-item w3-button"><span class="w3-padding w3-red w3-opacity-min"><b>{{tip}}</b></span> </a>
+      <div class="column" >
           <div id="sb-search" class="sb-search">
             <form name = "form" action = ""
                method = "POST" > {% csrf_token %}
@@ -100,7 +102,7 @@
   <span style="display:block; height: 52px;"></span>
   <!-- recommend section -->
   <div class="w3-container w3-padding-4" id="projects">
-    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Recomended</h3>
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">{{blah}}</h3>
   </div>
 
   <div class="w3-row-padding w3-grayscale">
@@ -111,8 +113,12 @@
     <div class="w3-col l3 m6 w3-margin-bottom">
       <img src="{{vid.videoInfo.snippet.thumbnails.medium.url}}" align="center" >
       <h5 class="titlehere" style="color:white">{{ vid.title }}</h5>
-      <a href="#" id = "playlist_{{ vid.videoInfo.id }}" style="text-decoration:none"><p><button
+      {% if tip == "SignOut" %}
+      {% if dummy != 10 %}
+        <a href="#" id = "playlist_{{ vid.videoInfo.id }}" style="text-decoration:none"><p><button
          class="w3-button w3-light-grey w3-block">addToPlayList</button></p></a>
+      {% endif %}
+      {% endif %}
 
     </div>
   </a>
@@ -140,7 +146,8 @@
 
 <!-- Footer -->
 <footer class="w3-center w3-black w3-padding-16">
-  <p>SUJAY &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; GEORGE &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; PAVAN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BHARADWAJ</p>
+  <p><b>Team Babu Bhosai</b><p>
+  <p>Bharadwaj &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; Sujay &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; <i>Pavan &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; George</i></p>
 </footer>
 
 

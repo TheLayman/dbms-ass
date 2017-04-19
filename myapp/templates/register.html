@@ -1,37 +1,203 @@
 
-<html>
-<head>
-  {% load static %}
-  <link rel="stylesheet" href="/static/styles.css">
-</head>
-   <body>
 
-      <p style = "background-color:#f90" > {{message}}  </p>
-
-      <div style = "margin: 0 20%;">
-      <form name = "form" action = ""
-         method = "POST" >{% csrf_token %}
-         <div style = "  max-width:470px; display : inline; " >
-               <input type = "text" style = ""
-                  name = "username" />
-         </div>
-         <div style = "  max-width:470px; display : inline; " >
-               <input type = "password" style = ""
-                  name = "password" />
-         </div>
-         <div style = "max-width:470px; display : inline; ">
-               <button style = "border:0px; background-color:#f90;
-                  height:25px; width:10%;"
-                  value = "Press" >
-                  <strong>Register</strong>
-               </button>
-         </div>
-
-      </form>
-
-      </div>
-
-   </body>
+      <!DOCTYPE html>
+      <html >
+      <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <title>BBS-SignUp</title>
 
 
-</html>
+
+            <style>
+      @import url(http://fonts.googleapis.com/css?family=Exo:100,200,400);
+      @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300);
+
+      body{
+      	margin: 0;
+      	padding: 0;
+      	background: #fff;
+
+      	color: #fff;
+      	font-family: 'Exo', sans-serif;
+        font-size: 25px;
+      	font-weight: 200;
+      }
+      {% load static %}
+      .body{
+      	position: absolute;
+      	top: -80px;
+      	left: -40px;
+      	right: -40px;
+      	bottom: -40px;
+      	width: auto;
+      	height: auto;
+      	background-image: url({% static "database1.jpg" %});
+      	background-size: cover ;
+      	-webkit-filter: blur(4px);
+      	z-index: 0px;
+      }
+
+      .grad{
+      	position: absolute;
+      	top: -20px;
+      	left: -20px;
+      	right: -40px;
+      	bottom: -40px;
+      	width: auto;
+      	height: auto;
+      	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65))); /* Chrome,Safari4+ */
+      	z-index: 1;
+      	opacity: 0.7;
+      }
+
+      .header{
+      	position: absolute;
+      	top: calc(50% - 35px);
+      	left: calc(50% - 350px);
+      	z-index: 2;
+      }
+
+      .continuewithout{
+      	position: absolute;
+      	top: calc(50% + 15px);
+      	left: calc(50% - 300px);
+      	z-index: 2;
+      }
+
+      .continuewithout div{
+      	float: left;
+      	color: #fff;
+      	font-family: 'Exo', sans-serif;
+      	font-size: 25px;
+      	font-weight: 200;
+      }
+
+      .header div{
+      	float: left;
+      	color: #fff;
+      	font-family: 'Exo', sans-serif;
+      	font-size: 35px;
+      	font-weight: 200;
+      }
+
+      .header div span{
+      	color: #5379fa !important;
+      }
+
+      .login{
+      	position: absolute;
+      	top: calc(30% - 75px);
+      	left: calc(52% - 50px);
+      	height: 150px;
+      	width: 350px;
+      	padding: 10px;
+      	z-index: 2;
+      }
+
+      .login input[type=text]{
+      	width: 250px;
+      	height: 30px;
+      	background: transparent;
+      	border: 1px solid rgba(255,255,255,0.6);
+      	border-radius: 2px;
+      	color: #fff;
+      	font-family: 'Exo', sans-serif;
+      	font-size: 16px;
+      	font-weight: 400;
+      	padding: 4px;
+      }
+
+      .login input[type=password]{
+      	width: 250px;
+      	height: 30px;
+      	background: transparent;
+      	border: 1px solid rgba(255,255,255,0.6);
+      	border-radius: 2px;
+      	color: #fff;
+      	font-family: 'Exo', sans-serif;
+      	font-size: 16px;
+      	font-weight: 400;
+      	padding: 4px;
+      	margin-top: 10px;
+      }
+
+      .login input[type=button]{
+      	width: 250px;
+      	height: 35px;
+      	background: #fff;
+      	border: 1px solid #fff;
+      	cursor: pointer;
+      	border-radius: 2px;
+      	color: #a18d6c;
+      	font-family: 'Exo', sans-serif;
+      	font-size: 16px;
+      	font-weight: 400;
+      	padding: 6px;
+      	margin-top: 10px;
+      }
+
+
+
+      .login input[type=button]:hover{
+      	opacity: 0.8;
+      }
+
+      .login input[type=button]:active{
+      	opacity: 0.6;
+      }
+
+      .login input[type=text]:focus{
+      	outline: none;
+      	border: 1px solid rgba(255,255,255,0.9);
+      }
+
+      .login input[type=password]:focus{
+      	outline: none;
+      	border: 1px solid rgba(255,255,255,0.9);
+      }
+
+      .login input[type=button]:focus{
+      	outline: none;
+      }
+
+      ::-webkit-input-placeholder{
+         color: rgba(255,255,255,0.6);
+      }
+
+      ::-moz-input-placeholder{
+         color: rgba(255,255,255,0.6);
+      }
+          </style>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+
+      </head>
+
+      <body>
+        <div class="body"></div>
+      		<div class="grad"></div>
+      		<div class="header">
+      			<div>Babu Bhosai <span>Search</span></div>
+      		</div>
+      		<br/>
+
+      		<div class="login">
+            <p>{{message}}</p>
+            <form name = "form" action = ""
+               method = "POST" >{% csrf_token %}
+
+      				<input type="text" placeholder="username" name="username"><br>
+      				<input type="password" placeholder="password" name="password"><br>
+      				<a href="javascript:;" onclick="parentNode.submit();"><input type="button" value="Sign Up"></a>
+
+            </form>
+      				<a href="{% url 'login' %}"><input type="button" style= "margin-top: 5px;" value="Login"></a>
+              <p> <span style="display:inline-block; width: 120px;"></span>or</p>
+              <a href="{% url 'hello' %}"><input type="button" style= "margin-top: 0px;" value="Continue without Login"></a>
+      		</div>
+        <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+
+      </body>
+      </html>

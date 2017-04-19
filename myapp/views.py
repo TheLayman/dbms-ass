@@ -39,7 +39,7 @@ def register(request):
            s = "INSERT INTO USERS  VALUES (%s,%s);"
            cursor.execute(s,args)
            daba.commit()
-           request.session['LoginMessage'] = "Congrats"
+           request.session['LoginMessage'] = "Success! Please login Now."
            return redirect(login)
        else:
            request.session['LoginMessage'] = "You've already registered! Please login now"
@@ -49,9 +49,9 @@ def register(request):
 
     if request.method == "GET":
         if request.session.has_key('username') and request.session['username'] != None :
-           return redirect('/myapp/hello/')
+           return redirect('/')
         else:
-           return render(request, 'register.html', {"message" : "register"})
+           return render(request, 'register.html', {"message" : "Please Signup"})
 
 def login(request):
     success = False
@@ -79,13 +79,13 @@ def login(request):
            return render(request, 'login.html', {"message" : "Systems Error, Please try again after sometime!"})
        if (success):
            request.session['username'] = username
-           return redirect('/myapp/hello/')
+           return redirect('/')
        else :
            return render(request, 'login.html', {"message" : "Incorrect Credentials!"})
 
     if request.method == "GET":
         if request.session.has_key('username') and request.session['username'] != None:
-           return redirect('/myapp/hello/')
+           return redirect('/')
         else:
            if message == "":
                message = "Login"
@@ -103,49 +103,60 @@ def logout(request):
 
 def hello(request):
     vid_list = []
-    username = request.session.get('username')
-    if request.method == "POST":
-       #Get the posted form
+
+    if request.method == "POST" :
+       if request.session.has_key('username') and request.session['username'] != None :
+            username = request.session.get('username')
+            tip="SignOut"
+       else:
+           username="None"
+           tip="Login"
        form = SearchForm(request.POST)
        query = form['text'].value()
-#videos.find({ "$text": { "$search": query }},{ "score": { "$meta": "textScore" }}).sort([('score', {'$meta': 'textScore'})]):
        pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1,"videoInfo.snippet.thumbnails.default.url":1,"videoInfo.snippet.thumbnails.medium.url":1}}]
        for vid in videos.aggregate(pipeline=pipe):
-               sql = "SELECT click_count FROM click WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
-               try:
-                  cursor.execute(sql)
-                  results = cursor.fetchall()
-                  for row in results:
-                     click_count = row
-                     score=0.2*float( "%d " % \
-                            (click_count ))
-                     vid['score']+=score
-               except:
-                  print "Error: unable to fecth data"
-               sql = "SELECT * FROM liked WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
-               try:
-                  cursor.execute(sql)
-                  if not cursor.rowcount:
-                      vid['score']+=1
-               except:
-                  print "Error: unable to fecth data"
-               vid_list.append(vid)
+           if request.session.has_key('username') and request.session['username']!= None:
+                              sql = "SELECT click_count FROM click WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
+                              try:
+                                 cursor.execute(sql)
+                                 results = cursor.fetchall()
+                                 for row in results:
+                                    click_count = row
+                                    score=0.2*float( "%d " % \
+                                           (click_count ))
+                                    vid['score']+=score
+                              except:
+                                 print "Error: unable to fecth data"
+                              sql = "SELECT * FROM liked WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
+                              try:
+                                 cursor.execute(sql)
+                                 if not cursor.rowcount:
+                                     vid['score']+=1
+                              except:
+                                 print "Error: unable to fecth data"
+           vid_list.append(vid)
        if not vid_list:
            regex=".*" + query + ".*"
-           for vid in videos.find({"title":{'$regex': regex, "$options": "-i"}}).limit(10) :
+           for vid in videos.find({"title":{'$regex': regex, "$options": "-i"}}).limit(12) :
                vid_list.append(vid)
            if not vid_list:
-                for vid in videos.find({"tags":{'$regex': regex, "$options": "-i"}}).limit(10) :
+                for vid in videos.find({"tags":{'$regex': regex, "$options": "-i"}}).limit(12) :
                     vid_list.append(vid)
                 if not vid_list:
-                    for vid in videos.find({"desc":{'$regex': regex, "$options": "-i"}}).limit(10) :
+                    for vid in videos.find({"desc":{'$regex': regex, "$options": "-i"}}).limit(12) :
                         vid_list.append(vid)
-           return render(request, 'home.html', {"vid_list" : vid_list, "username" : username})
+           if not vid_list:
+                  return render(request, 'home.html', {"vid_list" : vid_list, "username" : username,"blah":"No Results Found, Try Changing the query","tip":tip})
+           return render(request, 'home.html', {"vid_list" : vid_list, "username" : username,"blah":"Search Results","tip":tip})
        newlist = sorted(vid_list, key=lambda k: k['score'],reverse=True)
-       return render(request, 'home.html', {"vid_list" : newlist, "username" : username})
-
-
+       return render(request, 'home.html', {"vid_list" : newlist, "username" : username,"blah":"Search Results","tip":tip})
     if request.method == "GET" :
+        if request.session.has_key('username') and request.session['username'] != None :
+             username = request.session.get('username')
+             tip="SignOut"
+        else:
+            username="None"
+            tip="Login"
         Id = request.GET.get("id")
         if Id!=None:
             video = videos.find_one({ "videoInfo.id" : Id })
@@ -155,68 +166,82 @@ def hello(request):
                 vid=videos.find_one({ "videoInfo.id" : one['m.id'] })
                 vid_list.append(vid)
             return render(request, 'play.html', {"current" : convert(video), "vid_list" : vid_list,
-                                                  "username" : username})
+                                                  "username" : username,"tip":tip})
         if Id==None:#TODO: Without Login....With Login.
-            for vid in videos.find().sort("likeCount",-1) :
+            for vid in videos.find().sort("likeCount",-1).limit(12) :
                 vid_list.append(vid)
 
             return render(request, 'home.html', { "vid_list" : vid_list,
-                                                  "username" : username})
+                                                  "username" : username,"blah":"Trending Videos","tip":tip})
 
 def trending(request):
     username=request.session.get('username')
     vid_list = []
+    if request.session.has_key('username') and request.session['username'] != None :
+         username = request.session.get('username')
+         tip="SignOut"
+    else:
+        tip="Login"
     if request.method == "GET" :
-       for vid in videos.find().sort("videoInfo.statistics.viewCount",-1).limit(10) :
+       for vid in videos.find().sort("videoInfo.statistics.viewCount",-1).limit(12) :
            vid_list.append(vid)
-       return render(request, 'home.html', {"vid_list" : vid_list})
-    if request.method == "POST":
-       #Get the posted form
-       form = SearchForm(request.POST)
-       query = form['text'].value()
-#videos.find({ "$text": { "$search": query }},{ "score": { "$meta": "textScore" }}).sort([('score', {'$meta': 'textScore'})]):
-       pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1,"videoInfo.snippet.thumbnails.default.url":1,"videoInfo.snippet.thumbnails.medium.url":1}}]
-       for vid in videos.aggregate(pipeline=pipe):
-               sql = "SELECT click_count FROM click WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
-               try:
-                  cursor.execute(sql)
-                  results = cursor.fetchall()
-                  for row in results:
-                     click_count = row
-                     score=0.2*float( "%d " % \
-                            (click_count ))
-                     vid['score']+=score
-               except:
-                  print "Error: unable to fecth data"
-               sql = "SELECT * FROM liked WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
-               try:
-                  cursor.execute(sql)
-                  if not cursor.rowcount:
-                      vid['score']+=1
-               except:
-                  print "Error: unable to fecth data"
-               vid_list.append(vid)
-       if not vid_list:
-           regex=".*" + query + ".*"
-           for vid in videos.find({"title":{'$regex': regex, "$options": "-i"}}).limit(10) :
+       return render(request, 'home.html', {"vid_list" : vid_list,"tip":tip})
+    if request.method == "POST" :
+           if request.session.has_key('username') and request.session['username'] != None :
+                username = request.session.get('username')
+                tip="SignOut"
+           else:
+               username="None"
+               tip="Login"
+           form = SearchForm(request.POST)
+           query = form['text'].value()
+           pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1,"videoInfo.snippet.thumbnails.default.url":1,"videoInfo.snippet.thumbnails.medium.url":1}}]
+           for vid in videos.aggregate(pipeline=pipe):
+               if request.session.has_key('username') and request.session['username']!= None:
+                                  sql = "SELECT click_count FROM click WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
+                                  try:
+                                     cursor.execute(sql)
+                                     results = cursor.fetchall()
+                                     for row in results:
+                                        click_count = row
+                                        score=0.2*float( "%d " % \
+                                               (click_count ))
+                                        vid['score']+=score
+                                  except:
+                                     print "Error: unable to fecth data"
+                                  sql = "SELECT * FROM liked WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
+                                  try:
+                                     cursor.execute(sql)
+                                     if not cursor.rowcount:
+                                         vid['score']+=1
+                                  except:
+                                     print "Error: unable to fecth data"
                vid_list.append(vid)
            if not vid_list:
-                for vid in videos.find({"tags":{'$regex': regex, "$options": "-i"}}).limit(10) :
-                    vid_list.append(vid)
-                if not vid_list:
-                    for vid in videos.find({"desc":{'$regex': regex, "$options": "-i"}}).limit(10) :
+               regex=".*" + query + ".*"
+               for vid in videos.find({"title":{'$regex': regex, "$options": "-i"}}).limit(12) :
+                   vid_list.append(vid)
+               if not vid_list:
+                    for vid in videos.find({"tags":{'$regex': regex, "$options": "-i"}}).limit(12) :
                         vid_list.append(vid)
-           return render(request, 'home.html', {"vid_list" : vid_list, "username" : username})
-       newlist = sorted(vid_list, key=lambda k: k['score'],reverse=True)
-       return render(request, 'home.html', {"vid_list" : newlist, "username" : username})
+                    if not vid_list:
+                        for vid in videos.find({"desc":{'$regex': regex, "$options": "-i"}}).limit(12) :
+                            vid_list.append(vid)
+               if not vid_list:
+                      return render(request, 'home.html', {"vid_list" : vid_list, "username" : username,"blah":"No Results Found, Try Changing the query","tip":tip})
+               return render(request, 'home.html', {"vid_list" : vid_list, "username" : username,"blah":"Search Results","tip":tip})
+           newlist = sorted(vid_list, key=lambda k: k['score'],reverse=True)
+           return render(request, 'home.html', {"vid_list" : newlist, "username" : username,"blah":"Search Results","tip":tip})
 
-
-## TODO : Get PL videos and add to vid_list
-##   -- handle Users and Guests.
 def playList(request):
     vid_list = []
     newlist=[]
-    username=request.session.get('username')
+    if request.session.has_key('username') and request.session['username'] != None :
+         username = request.session.get('username')
+         tip="SignOut"
+    else:
+        tip="Login"
+        return render(request, 'home.html', { "vid_list" : vid_list,"blah":"Please login to view your playlist","tip":tip})
     if request.method == "GET" :
        username=request.session.get('username')
        s="select * from playlist where user_id=\'"+username+"\';"
@@ -224,53 +249,56 @@ def playList(request):
        results = cursor.fetchall()
        for row in results:
           video_id = row[0]
-        #   video_id= ("%s" % (video_id ))
-        #   print(video_id)
           vid=videos.find_one({"videoInfo.id":video_id})
           vid_list.append(vid)
-       return render(request, 'home.html', {"vid_list" : vid_list})
-    if request.method == "POST":
-       #Get the posted form
-       form = SearchForm(request.POST)
-       query = form['text'].value()
-#videos.find({ "$text": { "$search": query }},{ "score": { "$meta": "textScore" }}).sort([('score', {'$meta': 'textScore'})]):
-       pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1,"videoInfo.snippet.thumbnails.default.url":1,"videoInfo.snippet.thumbnails.medium.url":1}}]
-       for vid in videos.aggregate(pipeline=pipe):
-               sql = "SELECT click_count FROM click WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
-               try:
-                  cursor.execute(sql)
-                  results = cursor.fetchall()
-                  for row in results:
-                     click_count = row
-                     score=0.2*float( "%d " % \
-                            (click_count ))
-                     vid['score']+=score
-               except:
-                  print "Error: unable to fecth data"
-               sql = "SELECT * FROM liked WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
-               try:
-                  cursor.execute(sql)
-                  if not cursor.rowcount:
-                      vid['score']+=1
-               except:
-                  print "Error: unable to fecth data"
-               vid_list.append(vid)
-       if not vid_list:
-           regex=".*" + query + ".*"
-           for vid in videos.find({"title":{'$regex': regex, "$options": "-i"}}).limit(10) :
+       return render(request, 'home.html', {"vid_list" : vid_list,"tip":tip,"dummy":10})
+    if request.method == "POST" :
+           if request.session.has_key('username') and request.session['username'] != None :
+                username = request.session.get('username')
+                tip="SignOut"
+           else:
+               username="None"
+               tip="Login"
+           form = SearchForm(request.POST)
+           query = form['text'].value()
+           pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1,"videoInfo.snippet.thumbnails.default.url":1,"videoInfo.snippet.thumbnails.medium.url":1}}]
+           for vid in videos.aggregate(pipeline=pipe):
+               if request.session.has_key('username') and request.session['username']!= None:
+                                  sql = "SELECT click_count FROM click WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
+                                  try:
+                                     cursor.execute(sql)
+                                     results = cursor.fetchall()
+                                     for row in results:
+                                        click_count = row
+                                        score=0.2*float( "%d " % \
+                                               (click_count ))
+                                        vid['score']+=score
+                                  except:
+                                     print "Error: unable to fecth data"
+                                  sql = "SELECT * FROM liked WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
+                                  try:
+                                     cursor.execute(sql)
+                                     if not cursor.rowcount:
+                                         vid['score']+=1
+                                  except:
+                                     print "Error: unable to fecth data"
                vid_list.append(vid)
            if not vid_list:
-                for vid in videos.find({"tags":{'$regex': regex, "$options": "-i"}}).limit(10) :
-                    vid_list.append(vid)
-                if not vid_list:
-                    for vid in videos.find({"desc":{'$regex': regex, "$options": "-i"}}).limit(10) :
+               regex=".*" + query + ".*"
+               for vid in videos.find({"title":{'$regex': regex, "$options": "-i"}}).limit(12) :
+                   vid_list.append(vid)
+               if not vid_list:
+                    for vid in videos.find({"tags":{'$regex': regex, "$options": "-i"}}).limit(12) :
                         vid_list.append(vid)
-           return render(request, 'home.html', {"vid_list" : vid_list, "username" : username})
-       newlist = sorted(vid_list, key=lambda k: k['score'],reverse=True)
-       return render(request, 'home.html', {"vid_list" : newlist, "username" : username})
+                    if not vid_list:
+                        for vid in videos.find({"desc":{'$regex': regex, "$options": "-i"}}).limit(12) :
+                            vid_list.append(vid)
+               if not vid_list:
+                      return render(request, 'home.html', {"vid_list" : vid_list, "username" : username,"blah":"No Results Found, Try Changing the query","tip":tip})
+               return render(request, 'home.html', {"vid_list" : vid_list, "username" : username,"blah":"Search Results","tip":tip})
+           newlist = sorted(vid_list, key=lambda k: k['score'],reverse=True)
+           return render(request, 'home.html', {"vid_list" : newlist, "username" : username,"blah":"Search Results","tip":tip})
 
-
-## Asyc request.
 ##   -- handle Users and Guests.
 @csrf_exempt
 def addToPlayList(request):
@@ -284,11 +312,10 @@ def addToPlayList(request):
             daba.commit()
         except:
             daba.rollback()
-        # print("Added to PL : " + videoId)
         return HttpResponse(videoId)
-
+    # else :
+    #     return render(request, 'login.html', {"message" : "You must Login to like."})
 ## Asyc request.
-## TODO : Add video to Liked Database add use it to recommend videos.
 ##   -- handle Users and Guests.
 @csrf_exempt
 def Like(request):
@@ -303,3 +330,5 @@ def Like(request):
         except:
             daba.rollback()
         return HttpResponse(videoId)
+    # else :
+    #     return render(request, 'login.html', {"message" : "You must Login to like."})
