@@ -122,6 +122,13 @@ def hello(request):
                      vid['score']+=score
                except:
                   print "Error: unable to fecth data"
+               sql = "SELECT * FROM liked WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
+               try:
+                  cursor.execute(sql)
+                  if not cursor.rowcount:
+                      vid['score']+=1
+               except:
+                  print "Error: unable to fecth data"
                vid_list.append(vid)
        if not vid_list:
            regex=".*" + query + ".*"
@@ -167,19 +174,35 @@ def trending(request):
 ##   -- handle Users and Guests.
 def playList(request):
     vid_list = []
-    if request.method == "GET" :
-       for vid in videos.find({"videoInfo.snippet.title":{'$regex': ""}}).limit(10) :
-           vid_list.append(vid)
+    newlist=[]
+    if request.method == "GET" and (request.session.get('username') != None):
+       username=request.session.get('username')
+       s="select * from playlist where user_id=\'"+username+"\';"
+       cursor.execute(s)
+       results = cursor.fetchall()
+       for row in results:
+          video_id = row[0]
+        #   video_id= ("%s" % (video_id ))
+        #   print(video_id)
+          vid=videos.find_one({"videoInfo.id":video_id})
+          vid_list.append(vid)
        return render(request, 'hello.html', {"vid_list" : vid_list})
 
 ## Asyc request.
-## TODO : Add video to playlist Database.
 ##   -- handle Users and Guests.
 @csrf_exempt
 def addToPlayList(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and (request.session.get('username') != None):
         videoId = request.POST.get('data', None)
-        print("Added to PL : " + videoId)
+        username=request.session.get('username')
+        args=(videoId,username)
+        s = "INSERT INTO playlist  VALUES (%s,%s);"
+        cursor.execute(s,args)
+        try:
+            daba.commit()
+        except:
+            daba.rollback()
+        # print("Added to PL : " + videoId)
         return HttpResponse(videoId)
 
 ## Asyc request.
@@ -187,7 +210,14 @@ def addToPlayList(request):
 ##   -- handle Users and Guests.
 @csrf_exempt
 def Like(request):
-    if request.method == 'POST':
+    if request.method == 'POST'and (request.session.get('username') != None):
         videoId = request.POST.get('data', None)
-        print("Liked : " + videoId)
+        username=request.session.get('username')
+        args=(videoId,username)
+        s = "INSERT INTO liked  VALUES (%s,%s);"
+        cursor.execute(s,args)
+        try:
+            daba.commit()
+        except:
+            daba.rollback()
         return HttpResponse(videoId)

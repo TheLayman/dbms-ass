@@ -27,6 +27,40 @@ ac = """INSERT INTO USERS(user_id,pass)
          VALUES ('mahi','ghanta')"""
 cursor.execute(ac)
 
+cursor.execute("DROP TABLE IF EXISTS liked")
+c = """CREATE TABLE liked (
+         video_id  CHAR(20) NOT NULL,
+         user_id  CHAR(20)  NOT NULL,
+	 CONSTRAINT returns_pk PRIMARY KEY ( user_id, video_id ))"""
+cursor.execute(c)
+q = """INSERT INTO liked(video_id,user_id)
+         VALUES ("_4WfTlxXAL0",'bodd')"""
+cursor.execute(q)
+w= """INSERT INTO liked(video_id,user_id)
+         VALUES ("_7Qdz_TpcE0",'bodd')"""
+cursor.execute(w)
+e = """INSERT INTO liked(video_id,user_id)
+         VALUES ("_8X1sQbil9A",'bodd')"""
+cursor.execute(e)
+r = """INSERT INTO liked(video_id,user_id)
+         VALUES ("_56kX-8pdxg",'bodd')"""
+cursor.execute(r)
+t = """INSERT INTO liked(video_id,user_id)
+         VALUES ("_88fp0nLR40",'bodd')"""
+cursor.execute(t)
+y = """INSERT INTO liked(video_id,user_id)
+         VALUES ("_0ziqk9cZRM",'bodd')"""
+cursor.execute(y)
+u = """INSERT INTO liked(video_id,user_id)
+         VALUES ("_5kuoKHNxvc",'bodd')"""
+cursor.execute(u)
+i = """INSERT INTO liked(video_id,user_id)
+         VALUES ("_7LDQ4hyIrw",'bodd')"""
+cursor.execute(i)
+o = """INSERT INTO liked(video_id,user_id)
+         VALUES ("_8v1pkoDWs4",'bodd')"""
+cursor.execute(o)
+
 cursor.execute("DROP TABLE IF EXISTS playlist")
 c = """CREATE TABLE playlist (
          video_id  CHAR(20) NOT NULL,
@@ -34,31 +68,31 @@ c = """CREATE TABLE playlist (
 	 CONSTRAINT returns_pk PRIMARY KEY ( user_id, video_id ))"""
 cursor.execute(c)
 q = """INSERT INTO playlist(video_id,user_id)
-         VALUES ("4WfTlxXAL0",'bodd')"""
+         VALUES ("_4WfTlxXAL0",'bodd')"""
 cursor.execute(q)
 w= """INSERT INTO playlist(video_id,user_id)
-         VALUES ("7Qdz_TpcE0",'bodd')"""
+         VALUES ("_7Qdz_TpcE0",'bodd')"""
 cursor.execute(w)
 e = """INSERT INTO playlist(video_id,user_id)
-         VALUES ("8X1sQbil9A",'bodd')"""
+         VALUES ("_8X1sQbil9A",'bodd')"""
 cursor.execute(e)
 r = """INSERT INTO playlist(video_id,user_id)
-         VALUES ("56kX-8pdxg",'bodd')"""
+         VALUES ("_56kX-8pdxg",'bodd')"""
 cursor.execute(r)
 t = """INSERT INTO playlist(video_id,user_id)
-         VALUES ("88fp0nLR40",'bodd')"""
+         VALUES ("_88fp0nLR40",'bodd')"""
 cursor.execute(t)
 y = """INSERT INTO playlist(video_id,user_id)
-         VALUES ("0ziqk9cZRM",'bodd')"""
+         VALUES ("_0ziqk9cZRM",'bodd')"""
 cursor.execute(y)
 u = """INSERT INTO playlist(video_id,user_id)
-         VALUES ("5kuoKHNxvc",'bodd')"""
+         VALUES ("_5kuoKHNxvc",'bodd')"""
 cursor.execute(u)
 i = """INSERT INTO playlist(video_id,user_id)
-         VALUES ("7LDQ4hyIrw",'bodd')"""
+         VALUES ("_7LDQ4hyIrw",'bodd')"""
 cursor.execute(i)
 o = """INSERT INTO playlist(video_id,user_id)
-         VALUES ("8v1pkoDWs4",'bodd')"""
+         VALUES ("_8v1pkoDWs4",'bodd')"""
 cursor.execute(o)
 
 cursor.execute("DROP TABLE IF EXISTS click")
@@ -71,31 +105,31 @@ d = """CREATE TABLE click (
 cursor.execute(d)
 
 z = """INSERT INTO click(video_id,user_id,query,click_count)
-         VALUES ("4WfTlxXAL0",'bodd','Handling ATMs',29)"""
+         VALUES ("_4WfTlxXAL0",'bodd','Handling ATMs',29)"""
 cursor.execute(z)
 x= """INSERT INTO click(video_id,user_id,query,click_count)
-         VALUES ("7Qdz_TpcE0",'bodd','Pathankot Attack',46)"""
+         VALUES ("_7Qdz_TpcE0",'bodd','Pathankot Attack',46)"""
 cursor.execute(x)
 v = """INSERT INTO click(video_id,user_id,query,click_count)
-         VALUES ("8X1sQbil9A",'bodd','Bengali Rappers',65)"""
+         VALUES ("_8X1sQbil9A",'bodd','Bengali Rappers',65)"""
 cursor.execute(v)
 n = """INSERT INTO click(video_id,user_id,query,click_count)
-         VALUES ("56kX-8pdxg",'bodd','Uri Attacks',12)"""
+         VALUES ("_56kX-8pdxg",'bodd','Uri Attacks',12)"""
 cursor.execute(n)
 m = """INSERT INTO click(video_id,user_id,query,click_count)
-         VALUES ("88fp0nLR40",'bodd','26/11/2008 ',39)"""
+         VALUES ("_88fp0nLR40",'bodd','26/11/2008 ',39)"""
 cursor.execute(m)
 s = """INSERT INTO click(video_id,user_id,query,click_count)
-         VALUES ("0ziqk9cZRM",'bodd','Darza Khulya Dekhum',90)"""
+         VALUES ("_0ziqk9cZRM",'varma','Darza Khulya Dekhum',90)"""
 cursor.execute(s)
 f = """INSERT INTO click(video_id,user_id,query,click_count)
-         VALUES ("5kuoKHNxvc",'bodd','New Notes',32)"""
+         VALUES ("_5kuoKHNxvc",'varma','New Notes',32)"""
 cursor.execute(f)
 g = """INSERT INTO click(video_id,user_id,query,click_count)
-         VALUES ("7LDQ4hyIrw",'bodd','Demonetisation',54)"""
+         VALUES ("_7LDQ4hyIrw",'mahi','Demonetisation',54)"""
 cursor.execute(g)
 h = """INSERT INTO click(video_id,user_id,query,click_count)
-         VALUES ("8v1pkoDWs4",'bodd','Retaliatory Action',44)"""
+         VALUES ("_8v1pkoDWs4",'mahi','Retaliatory Action',44)"""
 cursor.execute(h)
 try:
    # Commit your changes in the database
