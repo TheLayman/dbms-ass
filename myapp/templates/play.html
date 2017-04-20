@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<title>Boobs HUB</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
+.w3-row-padding img {margin-bottom: 12px}
+/* Set the width of the sidebar to 120px */
+.w3-sidebar {width: 350px;background: #222;}
+/* Add a left margin to the "page content" that matches the width of the sidebar (120px) */
+#main {margin-left: 350px}
+/* Remove margins from "page content" on small screens */
+@media only screen and (max-width: 600px) {#main {margin-left: 0}}
+</style>
+
+<body class="w3-black">
+
+<!-- Icon Bar (Sidebar - hidden on small screens) -->
+<nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
+  <!-- Avatar image in top left corner
+  <img src="/w3images/avatar_smoke.jpg" style="width:100%">-->
+  <span style="display:block; height: 57px;"></span>
+  {% for vid in vid_list %}
+
+  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-black"><h2>{{ vid.title }}</h2>
+    <p>description</p>
+  </a>
+  {% endfor %}
+</nav>
+
+
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-wide w3-padding w3-card-2">
+  <a href="#home" class="w3-bar-item w3-button"><span class="w3-padding w3-black w3-opacity-min"><b>babu bhosai</b></span> <span class="w3-hide-small w3-text-blck">Search</span></h1></a>
+    <a href="#home" class="w3-bar-item w3-button"><span class="w3-padding w3-red w3-opacity-min"><b>signout</b></span> </a>
+    <a href="#projects" class="w3-bar-item w3-button">Most Viewed</a>
+      <a href="#about" class="w3-bar-item w3-button">Most liked</a>
+      <a href="#contact" class="w3-bar-item w3-button">Watch again</a>
+
+    <!-- Float links to the right. Hide them on small screens -->
+    <div class="column">
+        <div id="sb-search" class="sb-search">
+          <form name = "form" action = ""
+             method = "POST" > {% csrf_token %}
+            <input class="sb-search-input" placeholder="Enter your search term..." type="text" value="" name="text" />
+            <button> <input class="sb-search-submit" type="submit" value=""> </button>
+            <span class="sb-icon-search"></span>
+          </form>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+<!-- TODO ADD data here  -->
+
+<!-- Page Content -->
+<div class="w3-padding-large" id="main">
+  <!-- Header/Home -->
+  <header class="w3-container w3-padding-32 w3-center w3-black" id="home">
+
+    <h1 class="w3-jumbo">{{ current.title }}</h1>
+
+  </header>
+  <a  href="#" id = "playlist_{{ current.videoInfo.id }}"
+  style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px">Add to PlayList</a>
+  <a  href="#" id = "like_{{ current.videoInfo.id }}"
+      style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px;">I Like it</a>
+
+      <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+      {% block javascript %}
+           <script>
+             function addToPlayList(videoId) {
+               $.ajax({
+                 url: '/myapp/addToPlayList/',
+                 type: "post",
+                 data: {
+                  'data': videoId
+                 },
+                 error: function (xhr, e) {
+                    console.log(e);
+                 },
+                 // TODO : update UI that video is added too PL
+                 success: function (data) {
+                   if (data) {
+                      console.log(data);
+                   }
+                   document.getElementById("test").innerHTML = "Added to PlayList: " + data;
+                 }
+               });
+             }
+             function Like(videoId) {
+               $.ajax({
+                 url: '/myapp/Like/',
+                 type: "post",
+                 data: {
+                  'data': videoId
+                 },
+                 error: function (xhr, e) {
+                    console.log(e);
+                 },
+                 // TODO : update UI that video is Liked.
+                 success: function (data) {
+                   if (data) {
+                      console.log(data);
+                   }
+                   document.getElementById("test").innerHTML = "Liked "  + data;
+                 }
+               });
+             }
+           </script>
+      {% endblock %}
+
+      <script type="text/javascript">
+      // add Listeners
+      document.getElementById("playlist_{{ current.videoInfo.id }}").addEventListener("click", function(event) {
+        event.preventDefault();
+        addToPlayList("{{ current.videoInfo.id }}");
+        document.getElementById("playlist_{{ current.videoInfo.id }}").innerHTML = "Added to playList";
+      });
+      document.getElementById("like_{{ current.videoInfo.id }}").addEventListener("click", function(event) {
+        event.preventDefault();
+        Like("{{ current.videoInfo.id }}");
+        document.getElementById("like_{{ current.videoInfo.id }}").innerHTML = "Liked.";
+      });
+      </script>
+      <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+ <div class="w3-content w3-justify w3-text-grey w3-padding-10" id="about">
+    <h2 class="w3-text-light-grey">Description</h2>
+    <hr style="width:950px" class="w3-opacity">
+    <p>Some text about me. Some text about me. I am lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+      ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur
+      adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </p>
+
+    <div class="w3-row w3-center w3-padding-16 w3-section w3-light-grey">
+      <div class="w3-quarter w3-section">
+        <span class="w3-xlarge">11+</span><br>
+        Views
+      </div>
+      <div class="w3-quarter w3-section">
+        <span class="w3-xlarge">55+</span><br>
+        Likes
+      </div>
+      <div class="w3-quarter w3-section">
+        <span class="w3-xlarge">89+</span><br>
+        Dislikes
+      </div>
+      <div class="w3-quarter w3-section">
+        <span class="w3-xlarge">150+</span><br>
+        smthng
+      </div>
+    </div>
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-16">
+  <p>SUJAY &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; GEORGE &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; PAVAN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BHARADWAJ</p>
+</footer>
+
+
+</body>
+</html>

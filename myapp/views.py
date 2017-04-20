@@ -93,7 +93,7 @@ def hello(request):
        pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1}}]
        for vid in videos.aggregate(pipeline=pipe):
            vid_list.append(vid)
-       return render(request, 'hello.html', {"vid_list" : vid_list, "username" : username})
+       return render(request, 'home.html', {"vid_list" : vid_list, "username" : username})
 
 
     if request.method == "GET" :
@@ -105,12 +105,12 @@ def hello(request):
                 one=dict(one)
                 vid=videos.find_one({ "videoInfo.id" : one['m.id'] })
                 vid_list.append(vid)
-            return render(request, 'hello.html', {"current" : convert(video), "vid_list" : vid_list,
-                                                  "username" : username})
+            return render(request, 'play.html', {"current" : convert(video), "vid_list" : vid_list,
+                                                 "username" : username})
         if Id==None:#Without Login....With Login.
             for vid in videos.find().sort("likeCount",-1) :
                 vid_list.append(vid)
-            return render(request, 'hello.html', { "vid_list" : vid_list,
+            return render(request, 'home.html', { "vid_list" : vid_list,
                                                   "username" : username})
 ## TODO : Get trending videos and add to vid_list
 def trending(request):
