@@ -14,6 +14,9 @@ from utils import convert
 from pymongo import MongoClient
 from py2neo import Graph,Path,authenticate,Node,Relationship
 from pprint import pprint
+import MySQLdb
+db = MySQLdb.connect("localhost","root","iampavan","TESTDB")
+cursor = db.cursor()
 
 authenticate("localhost:7474","neo4j","haha")
 graph = Graph("http://localhost:7474/db/data/")
@@ -92,8 +95,31 @@ def hello(request):
 #videos.find({ "$text": { "$search": query }},{ "score": { "$meta": "textScore" }}).sort([('score', {'$meta': 'textScore'})]):
        pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1}}]
        for vid in videos.aggregate(pipeline=pipe):
-           vid_list.append(vid)
-       return render(request, 'hello.html', {"vid_list" : vid_list, "username" : username})
+               sql = "SELECT click_count FROM click WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
+               try:
+                  cursor.execute(sql)
+                  results = cursor.fetchall()
+                  for row in results:
+                     click_count = row
+                     score=0.2*float( "%d " % \
+                            (click_count ))
+                     vid['score']+=score
+               except:
+                  print "Error: unable to fecth data"
+               vid_list.append(vid)
+       if not vid_list:
+           regex=".*" + query + ".*"
+           for vid in videos.find({"title":{'$regex': regex, "$options": "-i"}}).limit(10) :
+               vid_list.append(vid)
+           if not vid_list:
+                for vid in videos.find({"tags":{'$regex': regex, "$options": "-i"}}).limit(10) :
+                    vid_list.append(vid)
+                if not vid_list:
+                    for vid in videos.find({"desc":{'$regex': regex, "$options": "-i"}}).limit(10) :
+                        vid_list.append(vid)
+           return render(request, 'hello.html', {"vid_list" : vid_list, "username" : username})
+       newlist = sorted(vid_list, key=lambda k: k['score'],reverse=True)
+       return render(request, 'hello.html', {"vid_list" : newlist, "username" : username})
 
 
     if request.method == "GET" :
