@@ -15,8 +15,8 @@ from pymongo import MongoClient
 from py2neo import Graph,Path,authenticate,Node,Relationship
 from pprint import pprint
 import MySQLdb
-db = MySQLdb.connect("localhost","root","iampavan","TESTDB")
-cursor = db.cursor()
+daba = MySQLdb.connect("localhost","root","iampavan","TESTDB")
+cursor = daba.cursor()
 
 authenticate("localhost:7474","neo4j","haha")
 graph = Graph("http://localhost:7474/db/data/")
@@ -25,16 +25,27 @@ db = connection.videos
 videos = db.videos
 
 
-## TODO : Add users to DB
 def register(request):
     if request.method == "POST":
        #Get the posted form
        form = RegisterForm(request.POST)
        username = form['username'].value()
        password = form['password'].value()
-       ## ADD to database and check if user already exists,
-       request.session['LoginMessage'] = "Congrats"
-       return redirect(login)
+       args=(username,password)
+       ## ADD to database and check if user already exists
+       sql = "SELECT * FROM USERS WHERE user_id = \'"+username+"\' AND pass = \'"+password+"\';"
+       cursor.execute(sql)
+       if not cursor.rowcount:
+           s = "INSERT INTO USERS  VALUES (%s,%s);"
+           cursor.execute(s,args)
+           daba.commit()
+           request.session['LoginMessage'] = "Congrats"
+           return redirect(login)
+       else:
+           request.session['LoginMessage'] = "You've already registered Niggah! Login Please."
+           return redirect(login)
+
+
 
     if request.method == "GET":
         if request.session.has_key('username') and request.session['username'] != None :
@@ -42,7 +53,6 @@ def register(request):
         else:
            return render(request, 'register.html', {"message" : "register"})
 
-## TODO : Check auth from database
 def login(request):
     success = False
     message = request.session.get('LoginMessage')
@@ -57,13 +67,21 @@ def login(request):
        username = form['username'].value()
        password = form['password'].value()
        ## Check Auth here.
-       if ( username == "karthik" and password == "password" ):
-           success = True
+       sql = "SELECT * FROM USERS WHERE user_id = \'"+username+"\' AND pass = \'"+password+"\';"
+       try:
+          cursor.execute(sql)
+          if not cursor.rowcount:
+              success=False
+          else:
+            success = True
+       except:
+           success=False
+           return render(request, 'login.html', {"message" : "Systems Error, Please try again after sometime!"})
        if (success):
            request.session['username'] = username
            return redirect('/myapp/hello/')
        else :
-           return render(request, 'login.html', {"message" : "username and password combo doesn't exist"})
+           return render(request, 'login.html', {"message" : "Incorrect Credentials!"})
 
     if request.method == "GET":
         if request.session.has_key('username') and request.session['username'] != None:
@@ -82,8 +100,7 @@ def logout(request):
        pass
    return redirect(login)
 
-## TODO write logic for first request.
-##   -- handle Users and Guests.
+
 def hello(request):
     vid_list = []
     username = request.session.get('username')
@@ -91,7 +108,6 @@ def hello(request):
        #Get the posted form
        form = SearchForm(request.POST)
        query = form['text'].value()
-       ## TODO : write better query
 #videos.find({ "$text": { "$search": query }},{ "score": { "$meta": "textScore" }}).sort([('score', {'$meta': 'textScore'})]):
        pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1}}]
        for vid in videos.aggregate(pipeline=pipe):
@@ -133,12 +149,13 @@ def hello(request):
                 vid_list.append(vid)
             return render(request, 'hello.html', {"current" : convert(video), "vid_list" : vid_list,
                                                   "username" : username})
-        if Id==None:#Without Login....With Login.
+        if Id==None:#TODO: Without Login....With Login.
             for vid in videos.find().sort("likeCount",-1) :
                 vid_list.append(vid)
+
             return render(request, 'hello.html', { "vid_list" : vid_list,
                                                   "username" : username})
-## TODO : Get trending videos and add to vid_list
+
 def trending(request):
     vid_list = []
     if request.method == "GET" :
