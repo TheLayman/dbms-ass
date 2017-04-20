@@ -140,9 +140,9 @@ def hello(request):
                 if not vid_list:
                     for vid in videos.find({"desc":{'$regex': regex, "$options": "-i"}}).limit(10) :
                         vid_list.append(vid)
-           return render(request, 'hello.html', {"vid_list" : vid_list, "username" : username})
+           return render(request, 'home.html', {"vid_list" : vid_list, "username" : username})
        newlist = sorted(vid_list, key=lambda k: k['score'],reverse=True)
-       return render(request, 'hello.html', {"vid_list" : newlist, "username" : username})
+       return render(request, 'home.html', {"vid_list" : newlist, "username" : username})
 
 
     if request.method == "GET" :
@@ -154,13 +154,13 @@ def hello(request):
                 one=dict(one)
                 vid=videos.find_one({ "videoInfo.id" : one['m.id'] })
                 vid_list.append(vid)
-            return render(request, 'hello.html', {"current" : convert(video), "vid_list" : vid_list,
+            return render(request, 'play.html', {"current" : convert(video), "vid_list" : vid_list,
                                                   "username" : username})
         if Id==None:#TODO: Without Login....With Login.
             for vid in videos.find().sort("likeCount",-1) :
                 vid_list.append(vid)
 
-            return render(request, 'hello.html', { "vid_list" : vid_list,
+            return render(request, 'home.html', { "vid_list" : vid_list,
                                                   "username" : username})
 
 def trending(request):

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<title>BOOBS HUB</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expanding Search Bar Deconstructed</title>
+    <meta name="description" content="Expanding Search Bar Deconstructed" />
+    <meta name="keywords" content="transition, search, expanding, search input, sliding input, css3, javascript" />
+    <meta name="author" content="Codrops" />
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/static/css/default.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/component.css" />
+    <script src="/static/js/modernizr.custom.js"></script>
+<body>
+
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+  {% block javascript %}
+  <script>
+    function addToPlayList(videoId) {
+      $.ajax({
+        url: '/myapp/addToPlayList/',
+        type: "post",
+        data: {
+         'data': videoId
+        },
+        error: function (xhr, e) {
+           console.log(e);
+        },
+        // TODO : update UI that video is added too PL
+        success: function (data) {
+          if (data) {
+             console.log(data);
+          }
+          document.getElementById("test").innerHTML = "Added to PlayList: " + data;
+        }
+      });
+    }
+    function Like(videoId) {
+      $.ajax({
+        url: '/myapp/Like/',
+        type: "post",
+        data: {
+         'data': videoId
+        },
+        error: function (xhr, e) {
+           console.log(e);
+        },
+        // TODO : update UI that video is Liked.
+        success: function (data) {
+          if (data) {
+             console.log(data);
+          }
+          document.getElementById("test").innerHTML = "Liked "  + data;
+        }
+      });
+    }
+  </script>
+  {% endblock %}
+
+
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-wide w3-padding w3-card-2">
+    <a href="" class="w3-bar-item w3-button"><span class="w3-padding w3-black w3-opacity-min"><b>babu bhosai</b></span> <span class="w3-hide-small w3-text-blck">Search</span></h1></a>
+     <a href="{% url 'logout' %}"  class="w3-bar-item w3-button"><span class="w3-padding w3-red w3-opacity-min"><b>signout</b></span> </a>
+    <a href="#projects" class="w3-bar-item w3-button"><h5> Most Viewed</h5></a>
+      <a href="#about" class="w3-bar-item w3-button"><h5> Most liked</h5></a>
+      <a href="#contact" class="w3-bar-item w3-button"><h5>Watch again</h5></a>
+      <div class="column">
+          <div id="sb-search" class="sb-search">
+            <form name = "form" action = ""
+               method = "POST" > {% csrf_token %}
+              <input class="sb-search-input" placeholder="Enter your search term..." type="text" value="" name="text" />
+              <button> <input class="sb-search-submit" type="submit" value=""> </button>
+              <span class="sb-icon-search"></span>
+            </form>
+          </div>
+        </div>
+        <form >
+
+    <!-- Float links to the right. Hide them on small screens -->
+  </div>
+</div>
+<script src="/static/js/classie.js"></script>
+    <script src="/static/js/uisearch.js"></script>
+    <script>
+      new UISearch( document.getElementById( 'sb-search' ) );
+    </script>
+
+
+<!-- Header -->
+<header class="w3-display-container w3-content w3-wide" style="max-width:500px;" id="home">
+  <img class="w3-image" src="/static/database1.jpg" alt="Architecture" width="1500" height="80">
+  <div class="w3-display-middle w3-margin-top w3-center">
+      <div class="w3-right w3-hide-small">
+     </div>
+    <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>VIDEO</b></span>
+      <span class="w3-hide-small w3-text-light-grey">Hub</span></h1>
+  </div>
+</header>
+
+<!-- Page content -->
+<div class="w3-content w3-padding" style="max-width:1564px">
+
+  <!-- Project Section -->
+  <div class="w3-container w3-padding-32" id="projects">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Reccomended</h3>
+  </div>
+
+  <div class="w3-row-padding w3-grayscale">
+
+    {% for vid in vid_list %}
+  <a id = "vid_{{ vid.videoInfo.id }}" style="font-size: 30px;"class="third after"
+     href="{% url 'hello' %}?id={{ vid.videoInfo.id }}">
+    <div class="w3-col l3 m6 w3-margin-bottom">
+      <h3>{{ vid.title }}</h3>
+      <p class="w3-opacity">100 views</p>
+      <p>Short Desc</p>
+      <a href="#" id = "playlist_{{ vid.videoInfo.id }}" style="text-decoration:none"><p><button
+         class="w3-button w3-light-grey w3-block">addToPlayList</button></p></a>
+
+    </div>
+  </a>
+
+    <script type="text/javascript">
+    // add Listeners
+    document.getElementById("vid_{{ vid.videoInfo.id }}").addEventListener("click", function() {
+    });
+    document.getElementById("playlist_{{ vid.videoInfo.id }}").addEventListener("click", function(event) {
+      event.preventDefault();
+      addToPlayList("{{ vid.videoInfo.id }}");
+      document.getElementById("playlist_{{ vid.videoInfo.id }}").innerHTML = "Added to playList";
+    });
+    </script>
+
+    {% endfor %}
+  </div>
+
+  <div class="w3-container w3-padding-32" id="about">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">You might also Like :</h3>
+  </div>
+
+<!-- End page content -->
+</div>
+
+
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-16">
+  <p>SUJAY &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; GEORGE &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; PAVAN &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; BHARADWAJ</p>
+</footer>
+
+
+</body>
+</html>

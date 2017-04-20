@@ -1,12 +1,10 @@
 
 <html>
 <head>
-  {% load static %}
   <link rel="stylesheet" href="/static/styles.css">
 </head>
    <body>
 
-     {% load static %}
      <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 {% block javascript %}
      <script>
@@ -100,10 +98,13 @@
 
       <div class="wrapper">
       <split>
-      <a id = "vid_{{ vid.videoInfo.id }}" style="font-size: 30px;"class="third after" href="{% url 'hello' %}?id={{ vid.videoInfo.id }}">{{ vid.title }}</a>
+      <a id = "vid_{{ vid.videoInfo.id }}" style="font-size: 30px;"class="third after"
+      href="{% url 'hello' %}?id={{ vid.videoInfo.id }}">{{ vid.title }}</a>
       <br>
-      <a  href="#" id = "playlist_{{ vid.videoInfo.id }}" style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px">Add to PlayList</a>
-      <a  href="#" id = "like_{{ vid.videoInfo.id }}" style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px;">I Like it</a>
+      <a  href="#" id = "playlist_{{ vid.videoInfo.id }}"
+      style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px">Add to PlayList</a>
+      <a  href="#" id = "like_{{ vid.videoInfo.id }}"
+          style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px;">I Like it</a>
       </split>
       </div>
 
