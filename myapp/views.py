@@ -1,30 +1,3 @@
-
-Skip to content
-This repository
-
-    Pull requests
-    Issues
-    Gist
-
-    @TheLayman
-
-1
-0
-
-    0
-
-pavankarthikboddeda/dbms-ass
-Code
-Issues 0
-Pull requests 0
-Projects 0
-Wiki
-Pulse
-Graphs
-dbms-ass/myapp/views.py
-5868187 4 hours from now
-@pavankarthikboddeda pavankarthikboddeda Added Login, Register
-194 lines (169 sloc) 7.16 KB
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
@@ -218,7 +191,3 @@ def Like(request):
         videoId = request.POST.get('data', None)
         print("Liked : " + videoId)
         return HttpResponse(videoId)
-
-    Contact GitHub API Training Shop Blog About
-
-    © 2017 GitHub, Inc. Terms Privacy Security Status Help
