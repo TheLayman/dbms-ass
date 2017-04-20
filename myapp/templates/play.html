@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<title>Boobs HUB</title>
+<title>Babu Bhosai</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -26,8 +26,10 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
   <span style="display:block; height: 57px;"></span>
   {% for vid in vid_list %}
 
-  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-black"><h2>{{ vid.title }}</h2>
-    <p>description</p>
+  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-black">
+    <img src="{{vid.videoInfo.snippet.thumbnails.default.url}}" align="center" >
+    <h6>{{ vid.title }}</h6>
+
   </a>
   {% endfor %}
 </nav>
@@ -36,11 +38,10 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
   <div class="w3-bar w3-white w3-wide w3-padding w3-card-2">
-  <a href="#home" class="w3-bar-item w3-button"><span class="w3-padding w3-black w3-opacity-min"><b>babu bhosai</b></span> <span class="w3-hide-small w3-text-blck">Search</span></h1></a>
-    <a href="#home" class="w3-bar-item w3-button"><span class="w3-padding w3-red w3-opacity-min"><b>signout</b></span> </a>
-    <a href="#projects" class="w3-bar-item w3-button">Most Viewed</a>
-      <a href="#about" class="w3-bar-item w3-button">Most liked</a>
-      <a href="#contact" class="w3-bar-item w3-button">Watch again</a>
+  <a href="{% url 'hello' %}" class="w3-bar-item w3-button"><span class="w3-padding w3-black w3-opacity-min"><b>babu bhosai</b></span> <span class="w3-hide-small w3-text-blck">Search</span></h1></a>
+    <a href="{% url 'logout' %}" class="w3-bar-item w3-button"><span class="w3-padding w3-red w3-opacity-min"><b>signout</b></span> </a>
+    <a href="{% url 'playList' %}" class="w3-bar-item w3-button">My Playlist</a>
+      <a href="{% url 'trending' %}" class="w3-bar-item w3-button">Trending</a>
 
     <!-- Float links to the right. Hide them on small screens -->
     <div class="column">
@@ -63,14 +64,15 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 <div class="w3-padding-large" id="main">
   <!-- Header/Home -->
   <header class="w3-container w3-padding-32 w3-center w3-black" id="home">
-
-    <h1 class="w3-jumbo">{{ current.title }}</h1>
+    <img src="{{current.videoInfo.snippet.thumbnails.high.url}}" align="left" >
+    <span style="display:block; height: 25px;"></span>
+    <h1>{{ current.title }}</h1>
 
   </header>
   <a  href="#" id = "playlist_{{ current.videoInfo.id }}"
-  style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px">Add to PlayList</a>
+  style="font-size: 25px; color : deepskyblue;text-decoration: none;display : inline; padding: 0px 10px">Add to PlayList</a>
   <a  href="#" id = "like_{{ current.videoInfo.id }}"
-      style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px;">I Like it</a>
+      style="font-size: 25px;color : deepskyblue; text-decoration: none;display : inline; padding: 0px 10px;">I Like it</a>
 
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
       {% block javascript %}
@@ -132,29 +134,27 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 
  <div class="w3-content w3-justify w3-text-grey w3-padding-10" id="about">
+
     <h2 class="w3-text-light-grey">Description</h2>
     <hr style="width:950px" class="w3-opacity">
-    <p>Some text about me. Some text about me. I am lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-      ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur
-      adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-    </p>
+    <p>{{current.desc}}</p>
 
     <div class="w3-row w3-center w3-padding-16 w3-section w3-light-grey">
       <div class="w3-quarter w3-section">
-        <span class="w3-xlarge">11+</span><br>
+        <span class="w3-xlarge">{{ current.videoInfo.statistics.viewCount}}</span><br>
         Views
       </div>
       <div class="w3-quarter w3-section">
-        <span class="w3-xlarge">55+</span><br>
+        <span class="w3-xlarge">{{ current.likeCount}}</span><br>
         Likes
       </div>
       <div class="w3-quarter w3-section">
-        <span class="w3-xlarge">89+</span><br>
+        <span class="w3-xlarge">{{ current.videoInfo.statistics.dislikeCount}}</span><br>
         Dislikes
       </div>
       <div class="w3-quarter w3-section">
-        <span class="w3-xlarge">150+</span><br>
-        smthng
+        <span class="w3-xlarge">{{ current.videoInfo.statistics.favoriteCount}}</span><br>
+        favorites
       </div>
     </div>
 

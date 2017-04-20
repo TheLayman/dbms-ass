@@ -25,9 +25,6 @@ for fname in iglob(os.path.expanduser('test/*.json')):
         stats = videos['videoInfo']['statistics']
         node = Node("Video",id = videos['videoInfo']['id'], commentCount = stats['commentCount'], viewCount = stats['viewCount'], favoriteCount = stats['favoriteCount'], likeCount = int(stats['likeCount']) , dislikeCount = stats['dislikeCount'])
         graph.create(node)
-    i=i+1
-    if (i==50):
-         break
 print("Nodes Finished")
 
 for i in range(len(array)):

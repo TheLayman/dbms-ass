@@ -42,7 +42,7 @@ def register(request):
            request.session['LoginMessage'] = "Congrats"
            return redirect(login)
        else:
-           request.session['LoginMessage'] = "You've already registered Niggah! Login Please."
+           request.session['LoginMessage'] = "You've already registered! Please login now"
            return redirect(login)
 
 
@@ -109,7 +109,7 @@ def hello(request):
        form = SearchForm(request.POST)
        query = form['text'].value()
 #videos.find({ "$text": { "$search": query }},{ "score": { "$meta": "textScore" }}).sort([('score', {'$meta': 'textScore'})]):
-       pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1}}]
+       pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1,"videoInfo.snippet.thumbnails.default.url":1,"videoInfo.snippet.thumbnails.medium.url":1}}]
        for vid in videos.aggregate(pipeline=pipe):
                sql = "SELECT click_count FROM click WHERE user_id = \'"+username+"\' AND video_id = \'"+str(vid['videoInfo']['id'])+"\';"
                try:
@@ -168,7 +168,7 @@ def trending(request):
     if request.method == "GET" :
        for vid in videos.find().sort("videoInfo.statistics.viewCount",-1).limit(10) :
            vid_list.append(vid)
-       return render(request, 'hello.html', {"vid_list" : vid_list})
+       return render(request, 'home.html', {"vid_list" : vid_list})
 
 ## TODO : Get PL videos and add to vid_list
 ##   -- handle Users and Guests.
@@ -186,7 +186,7 @@ def playList(request):
         #   print(video_id)
           vid=videos.find_one({"videoInfo.id":video_id})
           vid_list.append(vid)
-       return render(request, 'hello.html', {"vid_list" : vid_list})
+       return render(request, 'home.html', {"vid_list" : vid_list})
 
 ## Asyc request.
 ##   -- handle Users and Guests.

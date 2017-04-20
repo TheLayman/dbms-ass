@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<title>BOOBS HUB</title>
+<title>Babu Bhosai</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -14,6 +14,11 @@
     <link rel="stylesheet" type="text/css" href="/static/css/default.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/component.css" />
     <script src="/static/js/modernizr.custom.js"></script>
+    <style>
+    h5.titlehere{
+      min-height: 100px;
+    }
+    </style>
 <body>
 
   <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
@@ -66,9 +71,8 @@
   <div class="w3-bar w3-white w3-wide w3-padding w3-card-2">
     <a href="" class="w3-bar-item w3-button"><span class="w3-padding w3-black w3-opacity-min"><b>babu bhosai</b></span> <span class="w3-hide-small w3-text-blck">Search</span></h1></a>
      <a href="{% url 'logout' %}"  class="w3-bar-item w3-button"><span class="w3-padding w3-red w3-opacity-min"><b>signout</b></span> </a>
-    <a href="#projects" class="w3-bar-item w3-button"><h5> Most Viewed</h5></a>
-      <a href="#about" class="w3-bar-item w3-button"><h5> Most liked</h5></a>
-      <a href="#contact" class="w3-bar-item w3-button"><h5>Watch again</h5></a>
+    <a href="{% url 'trending' %}" class="w3-bar-item w3-button"><h5> Trending</h5></a>
+      <a href="{% url 'playList' %}" class="w3-bar-item w3-button"><h5> PlayList</h5></a>
       <div class="column">
           <div id="sb-search" class="sb-search">
             <form name = "form" action = ""
@@ -91,23 +95,12 @@
     </script>
 
 
-<!-- Header -->
-<header class="w3-display-container w3-content w3-wide" style="max-width:500px;" id="home">
-  <img class="w3-image" src="/static/database1.jpg" alt="Architecture" width="1500" height="80">
-  <div class="w3-display-middle w3-margin-top w3-center">
-      <div class="w3-right w3-hide-small">
-     </div>
-    <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>VIDEO</b></span>
-      <span class="w3-hide-small w3-text-light-grey">Hub</span></h1>
-  </div>
-</header>
-
 <!-- Page content -->
-<div class="w3-content w3-padding" style="max-width:1564px">
-
-  <!-- Project Section -->
-  <div class="w3-container w3-padding-32" id="projects">
-    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Reccomended</h3>
+<div class="w3-content w3-padding" style="max-width:1600px">
+  <span style="display:block; height: 52px;"></span>
+  <!-- recommend section -->
+  <div class="w3-container w3-padding-4" id="projects">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Recomended</h3>
   </div>
 
   <div class="w3-row-padding w3-grayscale">
@@ -116,9 +109,8 @@
   <a id = "vid_{{ vid.videoInfo.id }}" style="font-size: 30px;"class="third after"
      href="{% url 'hello' %}?id={{ vid.videoInfo.id }}">
     <div class="w3-col l3 m6 w3-margin-bottom">
-      <h3>{{ vid.title }}</h3>
-      <p class="w3-opacity">100 views</p>
-      <p>Short Desc</p>
+      <img src="{{vid.videoInfo.snippet.thumbnails.medium.url}}" align="center" >
+      <h5 class="titlehere" style="color:white">{{ vid.title }}</h5>
       <a href="#" id = "playlist_{{ vid.videoInfo.id }}" style="text-decoration:none"><p><button
          class="w3-button w3-light-grey w3-block">addToPlayList</button></p></a>
 
@@ -139,9 +131,7 @@
     {% endfor %}
   </div>
 
-  <div class="w3-container w3-padding-32" id="about">
-    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">You might also Like :</h3>
-  </div>
+
 
 <!-- End page content -->
 </div>
