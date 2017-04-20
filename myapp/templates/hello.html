@@ -7,9 +7,7 @@
    <body>
 
      {% load static %}
-     {% load dajaxice_templatetags %}
      <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-     <!-- <script type="text/javascript" src="{{ MEDIA_URL }}jquery.dajax.core.js"></script> -->
 {% block javascript %}
      <script>
        function addToPlayList(videoId) {
@@ -52,6 +50,9 @@
        }
      </script>
 {% endblock %}
+
+     <p style = "background-color:#f90" > {{username}}  </p>
+
       <div style = "margin: 0 20%;">
       <form name = "form" action = ""
          method = "POST" >{% csrf_token %}
@@ -68,7 +69,15 @@
          </div>
 
       </form>
-
+      <a href = "{% url 'logout' %}" >
+      <div style = "max-width:470px; display : inline; ">
+            <button
+               style = "border:0px; background-color:#f90; height:25px; width:10%;"
+               value = "Press" >
+               <strong>Logout</strong>
+            </button>
+      </div>
+      </a>
       </div>
 
       <div class="wrapper">

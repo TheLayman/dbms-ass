@@ -1,0 +1,37 @@
+
+<html>
+<head>
+  {% load static %}
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+   <body>
+
+      <p style = "background-color:#f90" > {{message}}  </p>
+
+      <div style = "margin: 0 20%;">
+      <form name = "form" action = ""
+         method = "POST" >{% csrf_token %}
+         <div style = "  max-width:470px; display : inline; " >
+               <input type = "text" style = ""
+                  name = "username" />
+         </div>
+         <div style = "  max-width:470px; display : inline; " >
+               <input type = "password" style = ""
+                  name = "password" />
+         </div>
+         <div style = "max-width:470px; display : inline; ">
+               <button style = "border:0px; background-color:#f90;
+                  height:25px; width:10%;"
+                  value = "Press" >
+                  <strong>Login</strong>
+               </button>
+         </div>
+
+      </form>
+
+      </div>
+
+   </body>
+
+
+</html>

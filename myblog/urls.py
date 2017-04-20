@@ -17,13 +17,16 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 admin.autodiscover()
-from myapp.views import hello, trending, addToPlayList, Like, playList
+from myapp.views import register, login, logout, hello, trending, addToPlayList, Like, playList
 urlpatterns = [
    #Examples
    #url(r'^$', 'myproject.view.home', name = 'home'),
    #url(r'^blog/', include('blog.urls')),
 
    url(r'^admin', include(admin.site.urls)),
+   url(r'^myapp/register/$', register, name = 'register'),
+   url(r'^myapp/login/$', login, name = 'login'),
+   url(r'^myapp/logout/$', logout, name = 'logout'),
    url(r'^myapp/hello/$', hello, name = 'hello'),
    url(r'^myapp/trending/$', trending, name = 'trending'),
    url(r'^myapp/playList/$', playList, name = 'playList'),

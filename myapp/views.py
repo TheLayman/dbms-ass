@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from myapp.forms import SearchForm
+from myapp.forms import SearchForm, LoginForm, RegisterForm
 
 import json
 from utils import convert
@@ -17,25 +17,87 @@ connection = MongoClient()
 db = connection.videos
 videos = db.videos
 
+
+## TODO : Add users to DB
+def register(request):
+    if request.method == "POST":
+       #Get the posted form
+       form = RegisterForm(request.POST)
+       username = form['username'].value()
+       password = form['password'].value()
+       ## ADD to database and check if user already exists,
+       request.session['LoginMessage'] = "Congrats"
+       return redirect(login)
+
+    if request.method == "GET":
+        if request.session.has_key('username') and request.session['username'] != None :
+           return redirect('/myapp/hello/')
+        else:
+           return render(request, 'register.html', {"message" : "register"})
+
+## TODO : Check auth from database
+def login(request):
+    success = False
+    message = request.session.get('LoginMessage')
+    if (message):
+        del request.session['LoginMessage']
+    else:
+        message = ""
+            
+    if request.method == "POST":
+       ## Get the posted form
+       form = LoginForm(request.POST)
+       username = form['username'].value()
+       password = form['password'].value()
+       ## Check Auth here.
+       if ( username == "karthik" and password == "password" ):
+           success = True
+       if (success):
+           request.session['username'] = username
+           return redirect('/myapp/hello/')
+       else :
+           return render(request, 'login.html', {"message" : "username and password combo doesn't exist"})
+
+    if request.method == "GET":
+        if request.session.has_key('username') and request.session['username'] != None:
+           return redirect('/myapp/hello/')
+        else:
+           if message == "":
+               message = "Login"
+           return render(request, 'login.html', {"message" : message})
+
+
+def logout(request):
+   try:
+       if (request.session.get('username') != None):
+           del request.session['username']
+   except:
+       pass
+   return redirect(login)
+
 ## TODO write logic for first request.
+##   -- handle Users and Guests.
 def hello(request):
     vid_list = []
+    username = request.session.get('username')
+
     if request.method == "POST":
        #Get the posted form
        form = SearchForm(request.POST)
        query = form['text'].value()
        ## TODO : write better query.
-       for vid in videos.find({"videoInfo.snippet.title":{'$regex': query}}) :
+       for vid in videos.find({"videoInfo.snippet.title" : {'$regex': query}}) :
            vid_list.append(vid)
            print(type(vid))
-       return render(request, 'hello.html', {"vid_list" : vid_list})
+       return render(request, 'hello.html', {"vid_list" : vid_list, "username" : username})
 
     if request.method == "GET" :
        Id = request.GET.get("id")
        video = videos.find_one({ "videoInfo.id" : Id })
        for vid in videos.find({"videoInfo.snippet.title":{'$regex': ""}}) :
            vid_list.append(vid)
-       return render(request, 'hello.html', {"current" : convert(video), "vid_list" : vid_list})
+       return render(request, 'hello.html', {"current" : convert(video), "vid_list" : vid_list,
+                                             "username" : username})
 
 ## TODO : Get trending videos and add to vid_list
 def trending(request):
@@ -46,6 +108,7 @@ def trending(request):
        return render(request, 'hello.html', {"vid_list" : vid_list})
 
 ## TODO : Get PL videos and add to vid_list
+##   -- handle Users and Guests.
 def playList(request):
     vid_list = []
     if request.method == "GET" :
@@ -55,6 +118,7 @@ def playList(request):
 
 ## Asyc request.
 ## TODO : Add video to playlist Database.
+##   -- handle Users and Guests.
 @csrf_exempt
 def addToPlayList(request):
     if request.method == 'POST':
@@ -64,6 +128,7 @@ def addToPlayList(request):
 
 ## Asyc request.
 ## TODO : Add video to Liked Database add use it to recommend videos.
+##   -- handle Users and Guests.
 @csrf_exempt
 def Like(request):
     if request.method == 'POST':

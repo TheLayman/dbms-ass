@@ -37,8 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dajaxice',
-    'dajax',
     'bootstrap3',
     'myapp',
 ]
