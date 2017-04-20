@@ -93,14 +93,14 @@
       </div>
 
       <div class="wrapper">
-      <a class="third after" href="#">{{ current.videoInfo.snippet.description }}</a>
+      <a class="third after" href="#">{{ current.desc }}</a>
       </div>
 
       {% for vid in vid_list %}
 
       <div class="wrapper">
       <split>
-      <a id = "vid_{{ vid.videoInfo.id }}" style="font-size: 30px;"class="third after" href="{% url 'hello' %}?id={{ vid.videoInfo.id }}">{{ vid.videoInfo.snippet.title }}</a>
+      <a id = "vid_{{ vid.videoInfo.id }}" style="font-size: 30px;"class="third after" href="{% url 'hello' %}?id={{ vid.videoInfo.id }}">{{ vid.title }}</a>
       <br>
       <a  href="#" id = "playlist_{{ vid.videoInfo.id }}" style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px">Add to PlayList</a>
       <a  href="#" id = "like_{{ vid.videoInfo.id }}" style="font-size: 10px; text-decoration: none;display : inline; padding: 0px 10px;">I Like it</a>

@@ -12,7 +12,11 @@ import json
 from utils import convert
 
 from pymongo import MongoClient
+from py2neo import Graph,Path,authenticate,Node,Relationship
+from pprint import pprint
 
+authenticate("localhost:7474","neo4j","haha")
+graph = Graph("http://localhost:7474/db/data/")
 connection = MongoClient()
 db = connection.videos
 videos = db.videos
@@ -43,7 +47,7 @@ def login(request):
         del request.session['LoginMessage']
     else:
         message = ""
-            
+
     if request.method == "POST":
        ## Get the posted form
        form = LoginForm(request.POST)
@@ -80,30 +84,39 @@ def logout(request):
 def hello(request):
     vid_list = []
     username = request.session.get('username')
-
     if request.method == "POST":
        #Get the posted form
        form = SearchForm(request.POST)
        query = form['text'].value()
-       ## TODO : write better query.
-       for vid in videos.find({"videoInfo.snippet.title" : {'$regex': query}}) :
+       ## TODO : write better query
+#videos.find({ "$text": { "$search": query }},{ "score": { "$meta": "textScore" }}).sort([('score', {'$meta': 'textScore'})]):
+       pipe=[{"$match":{"$text": {"$search": query} }}, {"$sort":{"score":{"$meta": "textScore"}}},{"$project":{"score":{"$meta":"textScore"},"videoInfo.id":1,"title":1,"desc":1}}]
+       for vid in videos.aggregate(pipeline=pipe):
            vid_list.append(vid)
-           print(type(vid))
        return render(request, 'hello.html', {"vid_list" : vid_list, "username" : username})
 
-    if request.method == "GET" :
-       Id = request.GET.get("id")
-       video = videos.find_one({ "videoInfo.id" : Id })
-       for vid in videos.find({"videoInfo.snippet.title":{'$regex': ""}}) :
-           vid_list.append(vid)
-       return render(request, 'hello.html', {"current" : convert(video), "vid_list" : vid_list,
-                                             "username" : username})
 
+    if request.method == "GET" :
+        Id = request.GET.get("id")
+        if Id!=None:
+            video = videos.find_one({ "videoInfo.id" : Id })
+            results = graph.run("MATCH (n)-[r]-(m) where n.id={x} return m.id order by r.weight desc limit 10", x=Id)
+            for one in results:
+                one=dict(one)
+                vid=videos.find_one({ "videoInfo.id" : one['m.id'] })
+                vid_list.append(vid)
+            return render(request, 'hello.html', {"current" : convert(video), "vid_list" : vid_list,
+                                                  "username" : username})
+        if Id==None:#Without Login....With Login.
+            for vid in videos.find().sort("likeCount",-1) :
+                vid_list.append(vid)
+            return render(request, 'hello.html', { "vid_list" : vid_list,
+                                                  "username" : username})
 ## TODO : Get trending videos and add to vid_list
 def trending(request):
     vid_list = []
     if request.method == "GET" :
-       for vid in videos.find({"videoInfo.snippet.title":{'$regex': ""}}).limit(10) :
+       for vid in videos.find().sort("videoInfo.statistics.viewCount",-1).limit(10) :
            vid_list.append(vid)
        return render(request, 'hello.html', {"vid_list" : vid_list})
 
