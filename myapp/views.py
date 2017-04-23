@@ -337,8 +337,22 @@ def addToPlayList(request):
         except:
             daba.rollback()
         return HttpResponse(videoId)
-    # else :
-    #     return render(request, 'login.html', {"message" : "You must Login to like."})
+
+@csrf_exempt
+def removeFromPlayList(request):
+    #    s="select * from playlist where user_id=\'"+username+"\'AND video_id=\'"+video_id+"\';"
+    if request.method == 'POST' and (request.session.get('username') != None):
+        videoId = request.POST.get('data', None)
+        username=request.session.get('username')
+        args=(videoId,username)
+        s = "DELETE FROM playlist WHERE video_id=%s AND user_id=%s"
+        cursor.execute(s,args)
+        try:
+            daba.commit()
+        except:
+            daba.rollback()
+        return HttpResponse(videoId)
+
 ## Asyc request.
 ##   -- handle Users and Guests.
 @csrf_exempt
@@ -354,5 +368,20 @@ def Like(request):
         except:
             daba.rollback()
         return HttpResponse(videoId)
-    # else :
-    #     return render(request, 'login.html', {"message" : "You must Login to like."})
+
+
+## Asyc request.
+##   -- handle Users and Guests.
+@csrf_exempt
+def unLike(request):
+    if request.method == 'POST'and (request.session.get('username') != None):
+        videoId = request.POST.get('data', None)
+        username=request.session.get('username')
+        args=(videoId,username)
+        s = "DELETE FROM Liked WHERE video_id=%s AND user_id=%s"
+        cursor.execute(s,args)
+        try:
+            daba.commit()
+        except:
+            daba.rollback()
+        return HttpResponse(videoId)

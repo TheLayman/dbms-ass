@@ -99,6 +99,9 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
       {% block javascript %}
            <script>
+
+             new UISearch( document.getElementById( 'sb-search' ) );
+
              function addToPlayList(videoId) {
                $.ajax({
                  url: '/addToPlayList/',
@@ -114,12 +117,28 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
                    if (data) {
                       console.log(data);
                    }
-                   document.getElementById("test").innerHTML = "Added to PlayList: " + data;
                  }
                });
              }
 
-               new UISearch( document.getElementById( 'sb-search' ) );
+             function removeFromPlayList(videoId) {
+               $.ajax({
+                 url: '/removeFromPlayList/',
+                 type: "post",
+                 data: {
+                  'data': videoId
+                 },
+                 error: function (xhr, e) {
+                    console.log(e);
+                 },
+                 // TODO : update UI that video is Liked.
+                 success: function (data) {
+                   if (data) {
+                      console.log(data);
+                   }
+                 }
+               });
+             }
 
              function Like(videoId) {
                $.ajax({
@@ -136,40 +155,68 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
                    if (data) {
                       console.log(data);
                    }
-                   document.getElementById("test").innerHTML = "Liked "  + data;
                  }
                });
              }
+
+             function unLike(videoId) {
+               $.ajax({
+                 url: '/unLike/',
+                 type: "post",
+                 data: {
+                  'data': videoId
+                 },
+                 error: function (xhr, e) {
+                    console.log(e);
+                 },
+                 success: function (data) {
+                   if (data) {
+                      console.log(data);
+                   }
+                 }
+               });
+             }
+
            </script>
       {% endblock %}
 
       <script type="text/javascript">
       if ("{{ current.inPlaylist }}" == "true") {
         console.log("in playList");
-        document.getElementById("playlist_{{ current.videoInfo.id }}").innerHTML = "Added to playList";
+        document.getElementById("playlist_{{ current.videoInfo.id }}").innerHTML = "Remove From PlayList";
+        document.getElementById("playlist_{{ current.videoInfo.id }}").addEventListener("click", function(event) {
+          event.preventDefault();
+          removeFromPlayList("{{ current.videoInfo.id }}");
+          document.getElementById("playlist_{{ current.videoInfo.id }}").innerHTML = "Removed From PlayList Bro.";
+        });
       } else {
         console.log("not in playList");
+        document.getElementById("playlist_{{ current.videoInfo.id }}").innerHTML = "Add To PlayList";
+        // add Listeners
+        document.getElementById("playlist_{{ current.videoInfo.id }}").addEventListener("click", function(event) {
+          event.preventDefault();
+          addToPlayList("{{ current.videoInfo.id }}");
+          document.getElementById("playlist_{{ current.videoInfo.id }}").innerHTML = "Added to playList";
+        });
       }
 
       if ("{{ current.Liked }}" == "true") {
-        document.getElementById("like_{{ current.videoInfo.id }}").innerHTML = "Liked";
+        console.log("liked");
+        document.getElementById("like_{{ current.videoInfo.id }}").innerHTML = "UnLike";
+        document.getElementById("like_{{ current.videoInfo.id }}").addEventListener("click", function(event) {
+          event.preventDefault();
+          unLike("{{ current.videoInfo.id }}");
+          document.getElementById("like_{{ current.videoInfo.id }}").innerHTML = "UnLiked.";
+        });
       } else {
         console.log("not liked");
+        document.getElementById("like_{{ current.videoInfo.id }}").addEventListener("click", function(event) {
+          event.preventDefault();
+          Like("{{ current.videoInfo.id }}");
+          document.getElementById("like_{{ current.videoInfo.id }}").innerHTML = "Liked.";
+        });
       }
-      // add Listeners
 
-      document.getElementById("playlist_{{ current.videoInfo.id }}").addEventListener("click", function(event) {
-        event.preventDefault();
-
-        addToPlayList("{{ current.videoInfo.id }}");
-        document.getElementById("playlist_{{ current.videoInfo.id }}").innerHTML = "Added to playList";
-      });
-      document.getElementById("like_{{ current.videoInfo.id }}").addEventListener("click", function(event) {
-        event.preventDefault();
-
-        Like("{{ current.videoInfo.id }}");
-        document.getElementById("like_{{ current.videoInfo.id }}").innerHTML = "Liked.";
-      });
       </script>
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 

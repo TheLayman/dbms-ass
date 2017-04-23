@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 admin.autodiscover()
-from myapp.views import register, login, logout, hello, trending, addToPlayList, Like, playList
+from myapp.views import register, login, logout, hello, trending, addToPlayList, Like, playList, removeFromPlayList, unLike
 urlpatterns = [
    #Examples
    #url(r'^$', 'myproject.view.home', name = 'home'),
@@ -34,6 +34,8 @@ urlpatterns = [
 
    ## Ajax views
    url(r'^addToPlayList/$', addToPlayList, name = 'addToPlayList'),
+   url(r'^removeFromPlayList/$', removeFromPlayList, name = 'removeFromPlayList'),
    url(r'^Like/$', Like, name = 'Like'),
+   url(r'^unLike/$',unLike, name = 'unLike'),
 
 ]
