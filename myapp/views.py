@@ -160,6 +160,21 @@ def hello(request):
         Id = request.GET.get("id")
         if Id!=None:
             video = videos.find_one({ "videoInfo.id" : Id })
+            # playlist check
+            sql = "select * from playlist where user_id=\'"+username+"\'AND video_id=\'"+Id+"\';"
+            cursor.execute(sql)
+            if not cursor.rowcount:
+                video["inPlaylist"] = "false"
+            else:
+                video["inPlaylist"] = "true"
+            #Liked check
+            sql = "select * from liked where user_id=\'"+username+"\'AND video_id=\'"+Id+"\';"
+            cursor.execute(sql)
+            if not cursor.rowcount:
+                video["Liked"] = "false"
+            else:
+                video["Liked"] = "true"
+
             videos.update({ "videoInfo.id" : Id },{'$inc':{"videoInfo.statistics.viewCount":1}})
             results = graph.run("MATCH (n)-[r]-(m) where n.id={x} return m.id order by r.weight desc limit 50", x=Id)
             for one in results:
