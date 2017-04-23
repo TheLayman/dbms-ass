@@ -124,6 +124,11 @@
   </a>
 
     <script type="text/javascript">
+    if ("{{ vid.inPlaylist}}" == "true") {
+      console.log("in playList");
+      document.getElementById("playlist_{{ vid.videoInfo.id }}").innerHTML = "Added to playList";
+    } else {
+    }
     // add Listeners
     document.getElementById("vid_{{ vid.videoInfo.id }}").addEventListener("click", function() {
     });

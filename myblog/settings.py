@@ -20,7 +20,7 @@ SECRET_KEY = 'so9_y_*1jwd(160pm!1v$k7m17kki1g&ut#-5-n#tji^kur+in'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.0.1.76','10.0.1.*']
+ALLOWED_HOSTS = ['10.0.1.76','*']
 
 
 # Application definition

@@ -185,6 +185,13 @@ def hello(request):
                                                   "username" : username,"tip":tip})
         if Id==None:#TODO: Without Login....With Login.
             for vid in videos.find().sort("videoInfo.statistics.viewCount",-1).limit(12) :
+                if username != "None":
+                    sql = "select * from playlist where user_id=\'"+username+"\'AND video_id=\'"+vid['videoInfo']['id']+"\';"
+                    cursor.execute(sql)
+                    if not cursor.rowcount:
+                        vid["inPlaylist"] = "false"
+                    else:
+                        vid["inPlaylist"] = "true"
                 vid_list.append(vid)
 
             return render(request, 'home.html', { "vid_list" : vid_list,
