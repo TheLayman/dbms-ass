@@ -34,10 +34,10 @@ for i in range(len(array)):
         a = graph.find_one("Video",property_key = 'id', property_value = temp['id'])
         b = graph.find_one("Video",property_key = 'id', property_value = dup['id'])
         if temp['snippet']['channelId'] == dup['snippet']['channelId']:
-            crelation = Relationship(a,"samechannel",b, weight=15)
+            crelation = Relationship(a,"samechannel",b, weight=5)
             graph.create(crelation)
 
-        dcount = 2*commoncount(temp['snippet']['description'].split(),dup['snippet']['description'].split())
+        dcount = 1.5*commoncount(temp['snippet']['description'].split(),dup['snippet']['description'].split())
         if dcount != 0:
             drelation = Relationship(a , "similardescription" , b , weight = dcount)
             graph.create(drelation)
@@ -48,7 +48,7 @@ for i in range(len(array)):
                 trelation = Relationship(a, "similartags", b, weight = tcount)
                 graph.create(trelation)
 
-        ccount=5*commoncount(temp['snippet']['title'].split(),dup['snippet']['title'].split())
+        ccount=10*commoncount(temp['snippet']['title'].split(),dup['snippet']['title'].split())
         if ccount != 0:
             crelation = Relationship(a , "similardescription" , b , weight = ccount)
             graph.create(crelation)

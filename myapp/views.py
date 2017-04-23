@@ -33,7 +33,7 @@ def register(request):
        password = form['password'].value()
        args=(username,password)
        ## ADD to database and check if user already exists
-       sql = "SELECT * FROM USERS WHERE user_id = \'"+username+"\' AND pass = \'"+password+"\';"
+       sql = "SELECT * FROM USERS WHERE user_id = \'"+username+"\'"
        cursor.execute(sql)
        if not cursor.rowcount:
            s = "INSERT INTO USERS  VALUES (%s,%s);"
@@ -160,7 +160,8 @@ def hello(request):
         Id = request.GET.get("id")
         if Id!=None:
             video = videos.find_one({ "videoInfo.id" : Id })
-            results = graph.run("MATCH (n)-[r]-(m) where n.id={x} return m.id order by r.weight desc limit 10", x=Id)
+            videos.update({ "videoInfo.id" : Id },{'$inc':{"videoInfo.statistics.viewCount":1}})
+            results = graph.run("MATCH (n)-[r]-(m) where n.id={x} return m.id order by r.weight desc limit 50", x=Id)
             for one in results:
                 one=dict(one)
                 vid=videos.find_one({ "videoInfo.id" : one['m.id'] })
@@ -168,7 +169,7 @@ def hello(request):
             return render(request, 'play.html', {"current" : convert(video), "vid_list" : vid_list,
                                                   "username" : username,"tip":tip})
         if Id==None:#TODO: Without Login....With Login.
-            for vid in videos.find().sort("likeCount",-1).limit(12) :
+            for vid in videos.find().sort("videoInfo.statistics.viewCount",-1).limit(12) :
                 vid_list.append(vid)
 
             return render(request, 'home.html', { "vid_list" : vid_list,
@@ -302,6 +303,7 @@ def playList(request):
 ##   -- handle Users and Guests.
 @csrf_exempt
 def addToPlayList(request):
+    #    s="select * from playlist where user_id=\'"+username+"\'AND video_id=\'"+video_id+"\';"
     if request.method == 'POST' and (request.session.get('username') != None):
         videoId = request.POST.get('data', None)
         username=request.session.get('username')
