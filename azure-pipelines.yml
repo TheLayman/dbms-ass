@@ -9,13 +9,6 @@ trigger:
 pool: default
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
 
 - task: GithubRelease@0 
   displayName: 'Create GitHub Release'      
@@ -25,4 +18,4 @@ steps:
     repositoryName: TheLayman/dbms-ass
     target: master
     tagSource: manual
-    tag: $(Build.BuildNumber)      
+    tag: vvvvv      
