@@ -13,7 +13,7 @@ steps:
 - task: GithubRelease@0 
   displayName: 'Create GitHub Release'      
   inputs:
-    gitHubConnection: georgeee
+    gitHubConnection: 'george'
     action: create
     repositoryName: TheLayman/dbms-ass
     target: master
