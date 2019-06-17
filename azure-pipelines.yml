@@ -17,5 +17,4 @@ steps:
     action: create
     repositoryName: TheLayman/dbms-ass
     target: master
-    tagSource: manual
-    tag: vvvvv      
+    tagSource: auto 
