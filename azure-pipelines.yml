@@ -12,12 +12,11 @@ trigger:
 pool: hosted
 
 steps:
-
-- task: GithubRelease@0 
-  displayName: 'Create GitHub Release'      
+- task: GitHubRelease@2
   inputs:
     gitHubConnection: GitHub
-    action: create
-    repositoryName: TheLayman/dbms-ass
-    target: master
-    tagSource: auto 
+    repositoryName: TheLayman/dbms-ass'
+    action: 'create'
+    target: b887769db196cb8aefddd60dbfee69f827a268fd
+    tagSource: 'auto'
+    tagPattern: brotherdear*
