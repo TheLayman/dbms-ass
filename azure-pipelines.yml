@@ -15,7 +15,7 @@ steps:
 - task: GitHubRelease@2
   inputs:
     gitHubConnection: GitHub
-    repositoryName: TheLayman/dbms-ass'
+    repositoryName: 'TheLayman/dbms-ass'
     action: 'create'
     target: b887769db196cb8aefddd60dbfee69f827a268fd
     tagSource: 'auto'
