@@ -19,4 +19,4 @@ steps:
     action: 'create'
     target: b887769db196cb8aefddd60dbfee69f827a268fd
     tagSource: 'auto'
-    tagPattern: brotherdear*
+    tagPattern: brotherdear[0-9]*
