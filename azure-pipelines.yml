@@ -19,5 +19,5 @@ steps:
     gitHubConnection: GitHub
     action: create
     repositoryName: TheLayman/dbms-ass
-    target: b887769db196cb8aefddd60dbfee69f827a268fd
+    target: master
     tagSource: auto 
