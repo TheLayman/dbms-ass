@@ -12,14 +12,14 @@ trigger:
 pool: hosted
 
 steps:
-- task: GitHubRelease@2
+- task: GitHubRelease@0
   displayName: 'GitHub release (edit)'
   inputs:
     gitHubConnection: GitHub
-    repositoryName: TheLayman/dnsproxy
+    repositoryName: 'TheLayman/dnsproxy'
     action: edit
     target: master
-    tag: v1.0
+    tag: v2
     title: boomchik
     releaseNotesSource: input
     releaseNotes: |
