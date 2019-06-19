@@ -12,23 +12,11 @@ trigger:
 pool: hosted
 
 steps:
-- task: GitHubRelease@0
-  displayName: 'GitHub release (edit)'
+- task: GithubRelease@0
+  displayName: 'Edit GitHub Release'
   inputs:
     gitHubConnection: GitHub
     repositoryName: TheLayman/dnsproxy
     action: edit
-    target: ec00588f93cb50558056bc590a54591494234be4
-    tag: 'v2'
-    title: 'booasdfasdfmchik'
-    releaseNotesSource: input
-    releaseNotes: |
-     The **under development** version of Openwall John the Ripper password cracker. This release contains the _Flatpak_ bundle and the Windows binaries, as well as all packages compilation logs. The _Snap_ package is accessible via **Snap Store edge channel**.
-          
-          NOTE: please inspect all packages prior to running any of them to ensure safety. We already know they're safe, but you should verify the security and contents of any binary from the internet you are not familiar with.
-          
-          _This was automatically created by Azure DevOps._
-     
-    assets: '$(System.DefaultWorkingDirectory)/*.*'
-    isPreRelease: true
-    addChangeLog: false
+    tag: v3
+    isDraft: false
