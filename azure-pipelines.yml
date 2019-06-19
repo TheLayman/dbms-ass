@@ -16,7 +16,7 @@ steps:
   displayName: 'GitHub release (edit)'
   inputs:
     gitHubConnection: GitHub
-    repositoryName: 'TheLayman/dnsproxy'
+    repositoryName: TheLayman/dnsproxy
     action: edit
     tag: 'v2'
     title: 'booasdfasdfmchik'
