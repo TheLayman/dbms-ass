@@ -18,7 +18,7 @@ steps:
     gitHubConnection: GitHub
     repositoryName: TheLayman/dnsproxy
     action: edit
-    target: 59eb696089997798bfcca775f75341d878ddb8a6
+    target: ec00588f93cb50558056bc590a54591494234be4
     tag: 'v2'
     title: 'booasdfasdfmchik'
     releaseNotesSource: input
