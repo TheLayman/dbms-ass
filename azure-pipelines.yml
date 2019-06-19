@@ -20,5 +20,6 @@ steps:
     repositoryName: TheLayman/dnsproxy
     action: edit
     tag: v3
+    target: master
     isDraft: false
     addChangeLog: false
