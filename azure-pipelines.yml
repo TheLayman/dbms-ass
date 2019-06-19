@@ -18,9 +18,8 @@ steps:
     gitHubConnection: GitHub
     repositoryName: 'TheLayman/dnsproxy'
     action: edit
-    target: master
-    tag: v2
-    title: boomchik
+    tag: 'v2'
+    title: 'booasdfasdfmchik'
     releaseNotesSource: input
     releaseNotes: |
      The **under development** version of Openwall John the Ripper password cracker. This release contains the _Flatpak_ bundle and the Windows binaries, as well as all packages compilation logs. The _Snap_ package is accessible via **Snap Store edge channel**.
