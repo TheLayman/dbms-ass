@@ -12,11 +12,11 @@ trigger:
 pool: hosted
 
 steps:
-- task: GitHubRelease@3
+- task: GitHubRelease@4
   displayName: 'GitHub release (create)'
   inputs:
     gitHubConnection: GitHub
-    repositoryName: TheLayman/feeserv
+    repositoryName: TheLayman/dnsproxy
     target: master
     tagSource: manual
     tag: newtag
@@ -24,3 +24,4 @@ steps:
     releaseNotesSource: input
     assets: '$(System.DefaultWorkingDirectory)/*.*'
     addChangeLog: true
+    compareWith: lastReleaseByTag
