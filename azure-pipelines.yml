@@ -19,9 +19,10 @@ steps:
     repositoryName: TheLayman/dnsproxy
     target: master
     tagSource: manual
-    tag: newtag
-    title: lala
+    tag: TTbt
+    title: lalu
     releaseNotesSource: input
     assets: '$(System.DefaultWorkingDirectory)/*.*'
     addChangeLog: true
     compareWith: lastReleaseByTag
+    releaseTag: v1.0
