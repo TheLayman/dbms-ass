@@ -19,10 +19,10 @@ steps:
     repositoryName: TheLayman/dbms-ass
     target: master
     tagSource: manual
-    tag: TTbt1
+    tag: TTbt2
     title: laludarwaza
     releaseNotesSource: input
     assets: '$(System.DefaultWorkingDirectory)/*.*'
     addChangeLog: true
-    compareWith: lastRelease
-    releaseTag: TTbt
+    compareWith: lastReleaseByTag
+    releaseTag: v1.*
