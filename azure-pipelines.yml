@@ -12,17 +12,17 @@ trigger:
 pool: hosted
 
 steps:
-- task: GitHubRelease@4
+- task: GitHubRelease@5
   displayName: 'GitHub release (create)'
   inputs:
     gitHubConnection: GitHub
     repositoryName: TheLayman/dnsproxy
     target: master
     tagSource: manual
-    tag: TTbtxs
+    tag: TTbtxs21
     title: lalu
     releaseNotesSource: input
     assets: '$(System.DefaultWorkingDirectory)/*.*'
     addChangeLog: true
     compareWith: lastReleaseByTag
-    releaseTag: v1.0sdfasdfasdf
+    releaseTag: v1.0sdfasdfasdfsdfasdfasdfad
