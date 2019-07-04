@@ -16,13 +16,13 @@ steps:
   displayName: 'GitHub release (create)'
   inputs:
     gitHubConnection: GitHub
-    repositoryName: TheLayman/dnsproxy
+    repositoryName: TheLayman/dbms-ass
     target: master
     tagSource: manual
-    tag: TTbtxs22
+    tag: TTbt1
     title: laludarwaza
     releaseNotesSource: input
     assets: '$(System.DefaultWorkingDirectory)/*.*'
     addChangeLog: true
-    compareWith: lastReleaseByTag
+    compareWith: lastRelease
     releaseTag: TTbt
