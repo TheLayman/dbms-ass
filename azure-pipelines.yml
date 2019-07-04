@@ -20,7 +20,7 @@ steps:
     target: master
     tagSource: manual
     tag: TTbt2
-    title: laludarwaza
+    title: laludarwazai
     releaseNotesSource: input
     assets: '$(System.DefaultWorkingDirectory)/*.*'
     addChangeLog: true
