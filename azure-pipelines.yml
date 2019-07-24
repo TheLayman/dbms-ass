@@ -15,10 +15,10 @@ steps:
 - task: GitHubRelease@10
   inputs:
     gitHubConnection: 'GitHub'
-    repositoryName: '$(Build.Repository.Name)'
+    repositoryName: TheLayman/dnsproxy    
     action: 'create'
     target: master
     tagSource: 'manual'
     tag: v5.7
     changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
-    changeLogCompareToReleaseTag: TTb*
+    changeLogCompareToReleaseTag: TTb.*
