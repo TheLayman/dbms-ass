@@ -12,17 +12,13 @@ trigger:
 pool: hosted
 
 steps:
-- task: GitHubRelease@5
-  displayName: 'GitHub release (create)'
+- task: GitHubRelease@10
   inputs:
-    gitHubConnection: GitHub
-    repositoryName: TheLayman/dbms-ass
+    gitHubConnection: 'GitHub'
+    repositoryName: '$(Build.Repository.Name)'
+    action: 'create'
     target: master
-    tagSource: manual
-    tag: TTbt2
-    title: laludarwazai
-    releaseNotesSource: input
-    assets: '$(System.DefaultWorkingDirectory)/*.*'
-    addChangeLog: true
-    compareWith: lastReleaseByTag
-    releaseTag: v1.*
+    tagSource: 'manual'
+    tag: v5.7
+    changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
+    changeLogCompareToReleaseTag: TTb*
