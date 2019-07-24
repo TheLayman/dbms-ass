@@ -20,5 +20,4 @@ steps:
     target: master
     tagSource: 'manual'
     tag: v5.7
-    changeLogCompareToRelease: 'lastNonDraftReleaseByTag'
-    changeLogCompareToReleaseTag: TTb.*
+    changeLogCompareToRelease: 'lastNonDraftRelease'
