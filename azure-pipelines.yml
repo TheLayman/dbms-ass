@@ -24,4 +24,4 @@ steps:
     changeLogCompareToRelease: lastNonDraftReleaseByTag
     changeLogCompareToReleaseTag: v33
     changeLogType: issueBased
-    changeLogLabels: '{"labels": [{"label": "duplicate", "displayName": "Duplicate Stuff"}]}'
+    changeLogLabels: '{"labels": [{"label": "*"}]}'
