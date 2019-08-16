@@ -12,16 +12,11 @@ trigger:
 pool: hosted
 
 steps:
-- task: GitHubRelease@6
+- task: GitHubRelease@1
   displayName: 'GitHub release (create)'
   inputs:
-    gitHubConnection: GitHub
-    repositoryName: TheLayman/dnsproxy
-    target: master
-    title: dodo
-    releaseNotesSource: input
-    assets: '$(System.DefaultWorkingDirectory)/*.*'
-    changeLogCompareToRelease: lastNonDraftReleaseByTag
-    changeLogCompareToReleaseTag: v33
-    changeLogType: issueBased
-    changeLogLabels: '{"labels": [{"label: "*"}]}'
+    gitHubConnection: 'github connection 1'
+    tagSource: gitTag
+    releaseNotesSource: inline
+    releaseNotesInline: 'Dude, What''s up? '
+    addChangeLog: false
